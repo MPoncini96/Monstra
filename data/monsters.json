@@ -1,0 +1,24 @@
+[
+  {
+    "id": "inferno",
+    "name": "Inferno",
+    "strategy": "Trades TQQQ, switches to SQQQ on bad market days (simulated).",
+    "baseAsset": "TQQQ",
+    "hedgeAsset": "SQQQ",
+    "stages": [
+      { "stage": 1, "img": "assets/monsters/inferno_stage1.png" },
+      { "stage": 2, "img": "assets/monsters/inferno_stage2.png" }
+    ]
+  },
+  {
+    "id": "aqua",
+    "name": "Aqua",
+    "strategy": "Placeholder strategy (simulated).",
+    "baseAsset": "SPY",
+    "hedgeAsset": "SH",
+    "stages": [
+      { "stage": 1, "img": "assets/monsters/aqua_stage1.png" },
+      { "stage": 2, "img": "assets/monsters/aqua_stage2.png" }
+    ]
+  }
+]
