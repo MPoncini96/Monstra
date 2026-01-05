@@ -1,20 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Inferno</title>
-  <link rel="stylesheet" href="../style.css">
-</head>
-<body>
+.primary-link {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: #1e293b;
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: bold;
+}
 
-  <a href="../index.html">← Back</a>
-
-  <h1>Inferno</h1>
-  <img src="../assets/monsters/monster1.png" alt="Inferno">
-
-  <p>
-    Inferno is a fire-based monster with high attack and burn damage.
-  </p>
-
-</body>
-</html>
+.primary-link:hover {
+  background: #334155;
+}
