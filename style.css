@@ -229,3 +229,77 @@ body{
   font-size: 14px;
   color: var(--muted);
 }
+
+
+/* ---------- Auth Layout ---------- */
+.auth-body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, sans-serif;
+}
+
+.auth-card {
+  background: #fff;
+  padding: 32px 36px;
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+.auth-title {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.auth-sub {
+  margin: 0 0 24px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.auth-form {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.auth-form input {
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 15px;
+}
+
+.auth-form button {
+  padding: 12px;
+  background: #ff385c;
+  border-radius: 12px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.auth-form button:hover {
+  background: #e6284c;
+}
+
+.auth-alt {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.auth-alt a {
+  text-decoration: none;
+  color: #ff385c;
+  font-weight: 600;
+}
+
