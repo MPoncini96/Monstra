@@ -40,41 +40,56 @@
     <div id="grid" class="cards"></div>
   </main>
 
-  <script type="module">
-    const res = await fetch("../data/monsters.json");
-    const monsters = await res.json();
-    const grid = document.getElementById("grid");
+ <script type="module">
+  // TEMPORARY HARDCODED DATA — we'll move this to monsters.json later
+  const monsters = [
+    {
+      id: "inferno",
+      name: "Inferno",
+      baseAsset: "TQQQ",
+      hedgeAsset: "SQQQ"
+    },
+    {
+      id: "aero",
+      name: "Aero" ,
+      baseAsset: "SPY",
+      hedgeAsset: "SH"
+    }
+    // add more monsters here as you draw them
+  ];
 
-    // Using your current preview naming:
-    // assets/monsters/monster1.png, monster2.png, ...
-    grid.innerHTML = monsters.map((m, idx) => {
-      const preview = `../assets/monsters/monster${idx + 1}.png`;
+  const grid = document.getElementById("grid");
 
-      return `
-        <a class="card" href="./monster.html?id=${m.id}">
-          <div class="card__imageWrap">
-            <img class="card__image" src="${preview}" alt="${m.name} preview" loading="lazy">
-            <button class="card__save" type="button" aria-label="Save">♡</button>
+  grid.innerHTML = monsters.map((m, idx) => {
+    // uses monster1.png, monster2.png, ... in assets/monsters/
+    const preview = `../assets/monsters/monster${idx + 1}.png`;
+
+    return `
+      <a class="card" href="./monster.html?id=${m.id}">
+        <div class="card__imageWrap">
+          <img class="card__image" src="${preview}" alt="${m.name} preview" loading="lazy">
+          <button class="card__save" type="button" aria-label="Save">♡</button>
+        </div>
+
+        <div class="card__body">
+          <div class="card__row">
+            <div class="card__title">${m.name}</div>
+            <div class="card__meta">Stage 1</div>
           </div>
+          <div class="card__sub">${m.baseAsset} → ${m.hedgeAsset}</div>
+          <div class="card__sub">Sim: +30% / −10%</div>
+        </div>
+      </a>
+    `;
+  }).join("");
 
-          <div class="card__body">
-            <div class="card__row">
-              <div class="card__title">${m.name}</div>
-              <div class="card__meta">Stage 1</div>
-            </div>
-            <div class="card__sub">${m.baseAsset} → ${m.hedgeAsset}</div>
-            <div class="card__sub">Sim: +30% / −10%</div>
-          </div>
-        </a>
-      `;
-    }).join("");
+  // keep the "save" button from navigating for now
+  grid.addEventListener("click", (e) => {
+    const btn = e.target.closest(".card__save");
+    if (btn) e.preventDefault();
+  });
+</script>
 
-    // Prevent save button from navigating (purely cosmetic for now)
-    grid.addEventListener("click", (e) => {
-      const btn = e.target.closest(".card__save");
-      if (btn) e.preventDefault();
-    });
-  </script>
 
 </body>
 </html>
