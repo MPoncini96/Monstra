@@ -40,29 +40,17 @@
     <div id="grid" class="cards"></div>
   </main>
 
- <script type="module">
-  // TEMPORARY HARDCODED DATA — we'll move this to monsters.json later
+  <script type="module">
+  // Hardcoded list for now — later it can come from JSON
   const monsters = [
-    {
-      id: "inferno",
-      name: "Inferno",
-      baseAsset: "TQQQ",
-      hedgeAsset: "SQQQ"
-    },
-    {
-      id: "aero",
-      name: "Aero" ,
-      baseAsset: "SPY",
-      hedgeAsset: "SH"
-    }
-    // add more monsters here as you draw them
+    { id: "tauru",  name: "Tauru",  baseAsset: "TQQQ", hedgeAsset: "SQQQ" },
+    { id: "aeros",  name: "Aeros",  baseAsset: "SPY",  hedgeAsset: "SH"   }
   ];
 
   const grid = document.getElementById("grid");
 
-  grid.innerHTML = monsters.map((m, idx) => {
-    // uses monster1.png, monster2.png, ... in assets/monsters/
-    const preview = `../assets/monsters/monster${idx + 1}.png`;
+  grid.innerHTML = monsters.map(m => {
+    const preview = `../assets/monsters/${m.id}/preview.png`;
 
     return `
       <a class="card" href="./monster.html?id=${m.id}">
@@ -83,13 +71,11 @@
     `;
   }).join("");
 
-  // keep the "save" button from navigating for now
   grid.addEventListener("click", (e) => {
     const btn = e.target.closest(".card__save");
     if (btn) e.preventDefault();
   });
 </script>
-
 
 </body>
 </html>
