@@ -2,26 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Monsters</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
-  <nav><a href="../index.html">Home</a></nav>
-  <h1>Monsters Overview</h1>
 
-  <div id="grid" class="monster-grid"></div>
+  <!-- Top bar (Airbnb-ish) -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="../index.html" aria-label="Monstra Home">
+        <span class="brand__dot"></span>
+        <span class="brand__text">Monstra</span>
+      </a>
+
+      <button class="searchpill" type="button" aria-label="Search">
+        <span class="searchpill__item">Monsters</span>
+        <span class="searchpill__divider"></span>
+        <span class="searchpill__item searchpill__muted">Stage</span>
+        <span class="searchpill__divider"></span>
+        <span class="searchpill__item searchpill__muted">Outcome</span>
+        <span class="searchpill__icon">🔍</span>
+      </button>
+
+      <div class="menu">
+        <a class="menu__link" href="#" aria-label="About">About</a>
+        <button class="menu__button" type="button" aria-label="Account menu">
+          ☰
+          <span class="menu__avatar"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1 class="page__title">Monsters</h1>
+    <div id="grid" class="cards"></div>
+  </main>
 
   <script type="module">
     const res = await fetch("../data/monsters.json");
     const monsters = await res.json();
     const grid = document.getElementById("grid");
 
-    grid.innerHTML = monsters.map(m => `
-      <a class="monster-card" href="./monster.html?id=${m.id}">
-        <h2>${m.name}</h2>
-        <p style="opacity:.8">${m.baseAsset} / ${m.hedgeAsset}</p>
-      </a>
-    `).join("");
+    // Using your current preview naming:
+    // assets/monsters/monster1.png, monster2.png, ...
+    grid.innerHTML = monsters.map((m, idx) => {
+      const preview = `../assets/monsters/monster${idx + 1}.png`;
+
+      return `
+        <a class="card" href="./monster.html?id=${m.id}">
+          <div class="card__imageWrap">
+            <img class="card__image" src="${preview}" alt="${m.name} preview" loading="lazy">
+            <button class="card__save" type="button" aria-label="Save">♡</button>
+          </div>
+
+          <div class="card__body">
+            <div class="card__row">
+              <div class="card__title">${m.name}</div>
+              <div class="card__meta">Stage 1</div>
+            </div>
+            <div class="card__sub">${m.baseAsset} → ${m.hedgeAsset}</div>
+            <div class="card__sub">Sim: +30% / −10%</div>
+          </div>
+        </a>
+      `;
+    }).join("");
+
+    // Prevent save button from navigating (purely cosmetic for now)
+    grid.addEventListener("click", (e) => {
+      const btn = e.target.closest(".card__save");
+      if (btn) e.preventDefault();
+    });
   </script>
+
 </body>
 </html>
