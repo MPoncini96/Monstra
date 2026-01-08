@@ -359,3 +359,31 @@ body{
   font-size: 13px;
   opacity: 0.8;
 }
+
+.menu__bytes {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 196, 0, 0.12);
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.bytes-icon {
+  width: 22px;       /* coin size */
+  height: 22px;
+  object-fit: contain;
+  display: block;
+}
+
+.bytes-amount {
+  font-weight: 600;
+}
+
+.bytes-label {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
