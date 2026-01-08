@@ -55,6 +55,32 @@
     <h1 class="page__title">Monsters</h1>
     <div id="grid" class="cards"></div>
   </main>
+  
+  <script>
+    // --- Auth guard ---
+    const email = localStorage.getItem("monstra_currentUser");
+    if (!email) {
+      window.location.href = "../index.html";
+    }
+  
+    // --- Load user info ---
+    const users = JSON.parse(localStorage.getItem("monstra_users") || "{}");
+    const user = users[email] || {};
+  
+    const username = user.username || "Player";
+    const monstraBytes = user.monstraBytes ?? 0;  // treat missing as 0
+  
+    // --- Render into header ---
+    const usernameTag = document.getElementById("usernameTag");
+    if (usernameTag) {
+      usernameTag.textContent = `Hi, ${username}!`;
+    }
+  
+    const bytesTag = document.getElementById("bytesTag");
+    if (bytesTag) {
+      bytesTag.textContent = `🪙 ${monstraBytes} MB`;
+    }
+  </script>
 
   <script type="module">
   // Hardcoded list for now — later it can come from JSON
