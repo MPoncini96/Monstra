@@ -25,4 +25,38 @@
   </div>
 
 </body>
+<script>
+  const form = document.querySelector(".auth-form");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = form.querySelector('input[type="email"]').value.trim();
+    const password = form.querySelector('input[type="password"]').value;
+
+    if (!email || !password) {
+      alert("Please enter email and password.");
+      return;
+    }
+
+    // Load users from localStorage
+    const raw = localStorage.getItem("monstra_users") || "{}";
+    const users = JSON.parse(raw);
+
+    if (!users[email]) {
+      alert("No account found with that email. Try registering.");
+      return;
+    }
+
+    if (users[email].password !== password) {
+      alert("Incorrect password.");
+      return;
+    }
+
+    // Set current user and redirect
+    localStorage.setItem("monstra_currentUser", email);
+    window.location.href = "./monsters/";  // go to monsters overview
+  });
+</script>
+ 
 </html>
