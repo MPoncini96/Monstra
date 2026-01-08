@@ -325,14 +325,7 @@ body{
   margin-right: 8px;
 }
 
-.menu__bytes {
-  font-size: 14px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(255, 196, 0, 0.15);
-  margin-right: 8px;
-}
-
+/* Monstra Bytes pill in header */
 .menu__bytes {
   display: inline-flex;
   align-items: center;
@@ -344,42 +337,12 @@ body{
   font-size: 14px;
 }
 
-.bytes-icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  display: block;
-}
-
-.bytes-amount {
-  font-weight: 600;
-}
-
-.bytes-label {
-  font-size: 13px;
-  opacity: 0.8;
-}
-
-.menu__bytes {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(255, 196, 0, 0.12);
-  margin-right: 8px;
-  font-size: 14px;
-}
-
+/* FORCE the coin size */
 .menu__bytes .bytes-icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-}
-
-.bytes-icon {
-  width: 5px;       /* coin size */
-  height: 5px;
+  width: 24px !important;
+  height: 24px !important;
+  max-width: 24px !important;
+  max-height: 24px !important;
   object-fit: contain;
   display: block;
 }
@@ -391,5 +354,21 @@ body{
 .bytes-label {
   font-size: 13px;
   opacity: 0.8;
+}
+
+/* Auth reset button (keep this from before) */
+.auth-reset {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  background: #e2e8f0;
+  border-radius: 12px;
+  color: #475569;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+.auth-reset:hover {
+  background: #cbd5e1;
 }
 
