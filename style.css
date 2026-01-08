@@ -372,8 +372,8 @@ body{
 }
 
 .bytes-icon {
-  width: 22px;       /* coin size */
-  height: 22px;
+  width: 5px;       /* coin size */
+  height: 5px;
   object-fit: contain;
   display: block;
 }
