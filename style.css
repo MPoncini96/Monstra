@@ -318,3 +318,9 @@ body{
   background: #cbd5e1;
 }
 
+#usernameTag {
+  padding: 6px 10px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 999px;
+  margin-right: 8px;
+}
