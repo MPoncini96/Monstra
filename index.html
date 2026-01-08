@@ -34,29 +34,24 @@
     const email = form.querySelector('input[type="email"]').value.trim();
     const password = form.querySelector('input[type="password"]').value;
 
-    if (!email || !password) {
-      alert("Please enter email and password.");
-      return;
-    }
-
-    // Load users from localStorage
     const raw = localStorage.getItem("monstra_users") || "{}";
     const users = JSON.parse(raw);
 
     if (!users[email]) {
-      alert("No account found with that email. Try registering.");
+      alert("No account found. Try registering.");
       return;
     }
 
     if (users[email].password !== password) {
-      alert("Incorrect password.");
+      alert("Wrong password.");
       return;
     }
 
-    // Set current user and redirect
+    // Set logged-in user and redirect
     localStorage.setItem("monstra_currentUser", email);
-    window.location.href = "./monsters/";  // go to monsters overview
+    window.location.href = "./monsters/";
   });
 </script>
+
  
 </html>
