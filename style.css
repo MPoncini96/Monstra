@@ -371,6 +371,12 @@ body{
   font-size: 14px;
 }
 
+.menu__bytes .bytes-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
 .bytes-icon {
   width: 5px;       /* coin size */
   height: 5px;
