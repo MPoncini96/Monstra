@@ -7,6 +7,13 @@
   <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
+  <script>
+    const user = localStorage.getItem("monstra_currentUser");
+    if (!user) {
+      // not logged in – send back to login
+      window.location.href = "../index.html";
+    }
+  </script>
 
   <!-- Top bar (Airbnb-ish) -->
   <header class="topbar">
