@@ -28,7 +28,6 @@
   </div>
 
 </body>
-
 <script>
   const form = document.querySelector(".auth-form");
 
@@ -59,14 +58,20 @@
       return;
     }
 
-    // Save user object — not secure (ok for prototype)
-    users[email] = { username, password };
+    // Store user (prototype only – plaintext password)
+    users[email] = {
+      username,
+      password,
+      monstraBytes: 0   // starting currency
+    };
+
     localStorage.setItem("monstra_users", JSON.stringify(users));
 
-    // Log them in
+    // Log them in and go to monsters
     localStorage.setItem("monstra_currentUser", email);
     window.location.href = "./monsters/";
   });
 </script>
+
 
 </html>
