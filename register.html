@@ -35,13 +35,14 @@
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const [emailInput, passInput, confirmInput] = form.querySelectorAll("input");
+    const [userInput, emailInput, passInput, confirmInput] = form.querySelectorAll("input");
+    const username = userInput.value.trim();
     const email = emailInput.value.trim();
     const password = passInput.value;
     const confirm = confirmInput.value;
 
-    if (!email || !password) {
-      alert("Email and password are required.");
+    if (!username || !email || !password) {
+      alert("All fields are required.");
       return;
     }
 
@@ -54,15 +55,15 @@
     const users = JSON.parse(raw);
 
     if (users[email]) {
-      alert("An account with that email already exists. Try logging in.");
+      alert("Email already exists. Try logging in.");
       return;
     }
 
-    // Store user (⚠️ plaintext – prototype only)
-    users[email] = { password };
+    // Save user object — not secure (ok for prototype)
+    users[email] = { username, password };
     localStorage.setItem("monstra_users", JSON.stringify(users));
 
-    // Auto-login and redirect
+    // Log them in
     localStorage.setItem("monstra_currentUser", email);
     window.location.href = "./monsters/";
   });
