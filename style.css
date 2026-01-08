@@ -303,3 +303,18 @@ body{
   font-weight: 600;
 }
 
+.auth-reset {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  background: #e2e8f0;
+  border-radius: 12px;
+  color: #475569;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+.auth-reset:hover {
+  background: #cbd5e1;
+}
+
