@@ -339,10 +339,10 @@ body{
 
 /* FORCE the coin size */
 .menu__bytes .bytes-icon {
-  width: 24px !important;
-  height: 24px !important;
-  max-width: 24px !important;
-  max-height: 24px !important;
+  width: 4px !important;
+  height: 4px !important;
+  max-width: 4px !important;
+  max-height: 4px !important;
   object-fit: contain;
   display: block;
 }
