@@ -33,7 +33,7 @@
       </button>
 
       <div class="menu">
-        <a class="menu__link" href="#" aria-label="About">About</a>
+        <button id="logoutBtn" class="menu__link" aria-label="Logout">Logout</button>
         <button class="menu__button" type="button" aria-label="Account menu">
           ☰
           <span class="menu__avatar"></span>
@@ -82,6 +82,12 @@
     const btn = e.target.closest(".card__save");
     if (btn) e.preventDefault();
   });
+  // --- Logout handling ---
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("monstra_currentUser");
+    window.location.href = "../index.html"; // back to login
+  });
+
 </script>
 
 </body>
