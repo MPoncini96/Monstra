@@ -7,25 +7,6 @@
   <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
-  <script>
-    const user = localStorage.getItem("monstra_currentUser");
-    if (!user) {
-      // not logged in – send back to login
-      window.location.href = "../index.html";
-    }
-  </script>
-  <script>
-  const allUsers = JSON.parse(localStorage.getItem("monstra_users") || "{}");
-  const email = localStorage.getItem("monstra_currentUser");
-  const username = allUsers[email]?.username;
-
-  // Optional: show username in top menu
-  const menuEl = document.querySelector(".menu");
-  if (username) {
-    menuEl.insertAdjacentHTML("afterbegin", `<span style="font-weight:600;">Hi, ${username}!</span>`);
-  }
-</script>
-
 
   <!-- Top bar -->
   <header class="topbar">
@@ -43,14 +24,18 @@
         <span class="searchpill__item searchpill__muted">Outcome</span>
         <span class="searchpill__icon">🔍</span>
       </button>
-      
+            
       <div class="menu">
         <span id="usernameTag"></span>
-        <span id="bytesTag" class="menu__bytes"></span>
-        <a class="menu__link" href="../bytes.html">Buy Bytes</a>
+
+        <span id="bytesTag" class="menu__bytes">
+          <span class="bytes-amount">0</span>
+          <img src="../assets/coin.png" alt="Monstra byte coin" class="bytes-icon">
+          <span class="bytes-label">Monstra Bytes</span>
+        </span>
+
         <button id="logoutBtn" class="menu__link">Logout</button>
       </div>
-
     </div>
   </header>
 
@@ -59,85 +44,76 @@
     <div id="grid" class="cards"></div>
   </main>
   
-  <script>
+  <script type="module">
     // --- Auth guard ---
     const email = localStorage.getItem("monstra_currentUser");
     if (!email) {
       window.location.href = "../index.html";
     }
-  
+
     // --- Load user info ---
     const users = JSON.parse(localStorage.getItem("monstra_users") || "{}");
     const user = users[email] || {};
-  
+
     const username = user.username || "Player";
-    const monstraBytes = user.monstraBytes ?? 0;  // treat missing as 0
-  
-    // --- Render into header ---
+    const monstraBytes = user.monstraBytes ?? 0; // treat missing as 0
+
+    // --- Render username ---
     const usernameTag = document.getElementById("usernameTag");
     if (usernameTag) {
       usernameTag.textContent = `Hi, ${username}!`;
     }
-  
+
+    // --- Render Monstra Bytes (number stays, coin image stays) ---
     const bytesTag = document.getElementById("bytesTag");
     if (bytesTag) {
-      bytesTag.textContent = `🪙 ${monstraBytes} MB`;
+      const amountEl = bytesTag.querySelector(".bytes-amount");
+      if (amountEl) {
+        amountEl.textContent = monstraBytes;
+      }
     }
-  </script>
 
-  <script type="module">
-  // Hardcoded list for now — later it can come from JSON
-  const monsters = [
-    { id: "tauru",  name: "Tauru",  baseAsset: "TQQQ", hedgeAsset: "SQQQ" },
-    { id: "aeros",  name: "Aeros",  baseAsset: "SPY",  hedgeAsset: "SH"   }
-  ];
+    // --- Logout handling ---
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("monstra_currentUser");
+      window.location.href = "../index.html"; // back to login
+    });
 
-  const grid = document.getElementById("grid");
+    // --- Monsters grid (hard-coded for now) ---
+    const monsters = [
+      { id: "tauru",  name: "Tauru",  baseAsset: "TQQQ", hedgeAsset: "SQQQ" },
+      { id: "aeros",  name: "Aeros",  baseAsset: "SPY",  hedgeAsset: "SH"   }
+    ];
 
-  grid.innerHTML = monsters.map(m => {
-    const preview = `../assets/monsters/${m.id}/preview.png`;
+    const grid = document.getElementById("grid");
 
-    return `
-      <a class="card" href="./monster.html?id=${m.id}">
-        <div class="card__imageWrap">
-          <img class="card__image" src="${preview}" alt="${m.name} preview" loading="lazy">
-          <button class="card__save" type="button" aria-label="Save">♡</button>
-        </div>
+    grid.innerHTML = monsters.map(m => {
+      const preview = `../assets/monsters/${m.id}/preview.png`;
 
-        <div class="card__body">
-          <div class="card__row">
-            <div class="card__title">${m.name}</div>
-            <div class="card__meta">Stage 1</div>
+      return `
+        <a class="card" href="./monster.html?id=${m.id}">
+          <div class="card__imageWrap">
+            <img class="card__image" src="${preview}" alt="${m.name} preview" loading="lazy">
+            <button class="card__save" type="button" aria-label="Save">♡</button>
           </div>
-          <div class="card__sub">${m.baseAsset} → ${m.hedgeAsset}</div>
-          <div class="card__sub">Sim: +30% / −10%</div>
-        </div>
-      </a>
-    `;
-  }).join("");
 
-  grid.addEventListener("click", (e) => {
-    const btn = e.target.closest(".card__save");
-    if (btn) e.preventDefault();
-  });
-  // --- Auth guard ---
-  const email = localStorage.getItem("monstra_currentUser");
-  if (!email) window.location.href = "../index.html";
-  
-  // --- Load username ---
-  const users = JSON.parse(localStorage.getItem("monstra_users") || "{}");
-  const username = users[email]?.username || "Player";
-  
-  // --- Display in header ---
-  document.getElementById("usernameTag").textContent = `Hi, ${username}!`;
+          <div class="card__body">
+            <div class="card__row">
+              <div class="card__title">${m.name}</div>
+              <div class="card__meta">Stage 1</div>
+            </div>
+            <div class="card__sub">${m.baseAsset} → ${m.hedgeAsset}</div>
+            <div class="card__sub">Sim: +30% / −10%</div>
+          </div>
+        </a>
+      `;
+    }).join("");
 
-  // --- Logout handling ---
-  document.getElementById("logoutBtn").addEventListener("click", () => {
-    localStorage.removeItem("monstra_currentUser");
-    window.location.href = "../index.html"; // back to login
-  });
-
-</script>
+    grid.addEventListener("click", (e) => {
+      const btn = e.target.closest(".card__save");
+      if (btn) e.preventDefault();
+    });
+  </script>
 
 </body>
 </html>
