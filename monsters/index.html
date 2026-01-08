@@ -43,13 +43,10 @@
         <span class="searchpill__item searchpill__muted">Outcome</span>
         <span class="searchpill__icon">🔍</span>
       </button>
-
+      
       <div class="menu">
-        <button id="logoutBtn" class="menu__link" aria-label="Logout">Logout</button>
-        <button class="menu__button" type="button" aria-label="Account menu">
-          ☰
-          <span class="menu__avatar"></span>
-        </button>
+        <span id="usernameTag" style="font-weight:600;"></span>
+        <button id="logoutBtn" class="menu__link">Logout</button>
       </div>
     </div>
   </header>
@@ -94,6 +91,17 @@
     const btn = e.target.closest(".card__save");
     if (btn) e.preventDefault();
   });
+  // --- Auth guard ---
+  const email = localStorage.getItem("monstra_currentUser");
+  if (!email) window.location.href = "../index.html";
+  
+  // --- Load username ---
+  const users = JSON.parse(localStorage.getItem("monstra_users") || "{}");
+  const username = users[email]?.username || "Player";
+  
+  // --- Display in header ---
+  document.getElementById("usernameTag").textContent = `Hi, ${username}!`;
+
   // --- Logout handling ---
   document.getElementById("logoutBtn").addEventListener("click", () => {
     localStorage.removeItem("monstra_currentUser");
