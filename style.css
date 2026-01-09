@@ -185,22 +185,6 @@ body{
   display: block;
 }
 
-.card__save{
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  border: 0;
-  background: rgba(0,0,0,0.35);
-  color: #fff;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  font-size: 16px;
-}
-
 .card__body{
   padding-top: 10px;
 }
@@ -370,5 +354,20 @@ body{
 }
 .auth-reset:hover {
   background: #cbd5e1;
+}
+
+.monsters-section {
+  margin-bottom: 32px;
+}
+
+.monsters-section h2 {
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+
+.section-subtitle {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: var(--muted);
 }
 
