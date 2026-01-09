@@ -41,7 +41,20 @@
 
   <main class="page">
     <h1 class="page__title">Monsters</h1>
-    <div id="grid" class="cards"></div>
+
+    <!-- Active Monsters Section -->
+    <section class="monsters-section">
+      <h2>Active Monsters</h2>
+      <p class="section-subtitle">These are your current monsters.</p>
+      <div id="activeGrid" class="cards"></div>
+    </section>
+
+    <!-- Shop Section -->
+    <section class="monsters-section">
+      <h2>Monster Shop</h2>
+      <p class="section-subtitle">Buy new monsters for <strong>1 Monstra Byte</strong> each.</p>
+      <div id="shopGrid" class="cards"></div>
+    </section>
   </main>
   
   <script type="module">
@@ -56,21 +69,38 @@
     const user = users[email] || {};
 
     const username = user.username || "Player";
-    const monstraBytes = user.monstraBytes ?? 0; // treat missing as 0
+
+    // Make these mutable so we can update when buying monsters
+    let monstraBytes = user.monstraBytes ?? 0;           // treat missing as 0
+    let ownedMonsters = user.ownedMonsters || [];        // array of monster ids
+
+    // --- DOM references ---
+    const usernameTag = document.getElementById("usernameTag");
+    const bytesTag = document.getElementById("bytesTag");
+    const activeGrid = document.getElementById("activeGrid");
+    const shopGrid = document.getElementById("shopGrid");
 
     // --- Render username ---
-    const usernameTag = document.getElementById("usernameTag");
     if (usernameTag) {
       usernameTag.textContent = `Hi, ${username}!`;
     }
 
-    // --- Render Monstra Bytes (number stays, coin image stays) ---
-    const bytesTag = document.getElementById("bytesTag");
-    if (bytesTag) {
+    // --- Update header bytes ---
+    function renderBytes() {
+      if (!bytesTag) return;
       const amountEl = bytesTag.querySelector(".bytes-amount");
       if (amountEl) {
         amountEl.textContent = monstraBytes;
       }
+    }
+    renderBytes();
+
+    // --- Save user back to localStorage ---
+    function saveUserState() {
+      user.monstraBytes = monstraBytes;
+      user.ownedMonsters = ownedMonsters;
+      users[email] = user;
+      localStorage.setItem("monstra_users", JSON.stringify(users));
     }
 
     // --- Logout handling ---
@@ -79,22 +109,19 @@
       window.location.href = "../index.html"; // back to login
     });
 
-    // --- Monsters grid (hard-coded for now) ---
+    // --- Monsters catalog (hard-coded for now) ---
     const monsters = [
       { id: "tauru",  name: "Tauru",  baseAsset: "TQQQ", hedgeAsset: "SQQQ" },
       { id: "aeros",  name: "Aeros",  baseAsset: "SPY",  hedgeAsset: "SH"   }
     ];
 
-    const grid = document.getElementById("grid");
-
-    grid.innerHTML = monsters.map(m => {
+    // --- Card templates ---
+    function ownedCardHTML(m) {
       const preview = `../assets/monsters/${m.id}/preview.png`;
-
       return `
         <a class="card" href="./monster.html?id=${m.id}">
           <div class="card__imageWrap">
             <img class="card__image" src="${preview}" alt="${m.name} preview" loading="lazy">
-            <button class="card__save" type="button" aria-label="Save">♡</button>
           </div>
 
           <div class="card__body">
@@ -104,14 +131,87 @@
             </div>
             <div class="card__sub">${m.baseAsset} → ${m.hedgeAsset}</div>
             <div class="card__sub">Sim: +30% / −10%</div>
+            <div class="card__price">Owned</div>
           </div>
         </a>
       `;
-    }).join("");
+    }
 
-    grid.addEventListener("click", (e) => {
-      const btn = e.target.closest(".card__save");
-      if (btn) e.preventDefault();
+    function shopCardHTML(m) {
+      const preview = `../assets/monsters/${m.id}/preview.png`;
+      return `
+        <article class="card">
+          <div class="card__imageWrap">
+            <img class="card__image" src="${preview}" alt="${m.name} preview" loading="lazy">
+          </div>
+
+          <div class="card__body">
+            <div class="card__row">
+              <div class="card__title">${m.name}</div>
+              <div class="card__meta">Stage 1</div>
+            </div>
+            <div class="card__sub">${m.baseAsset} → ${m.hedgeAsset}</div>
+            <div class="card__sub">Sim: +30% / −10%</div>
+            <div class="card__price">Price: 1 Monstra Byte</div>
+            <button 
+              class="card__buyBtn" 
+              type="button" 
+              data-monster-id="${m.id}">
+              Buy for 1 Byte
+            </button>
+          </div>
+        </article>
+      `;
+    }
+
+    // --- Render both sections ---
+    function renderMonsters() {
+      // Active monsters
+      const owned = monsters.filter(m => ownedMonsters.includes(m.id));
+      if (owned.length === 0) {
+        activeGrid.innerHTML = `
+          <p>You don't have any active monsters yet. Visit the shop below to buy one!</p>
+        `;
+      } else {
+        activeGrid.innerHTML = owned.map(ownedCardHTML).join("");
+      }
+
+      // Shop monsters (not owned)
+      const shop = monsters.filter(m => !ownedMonsters.includes(m.id));
+      if (shop.length === 0) {
+        shopGrid.innerHTML = `<p>You've purchased all available monsters. 🎉</p>`;
+      } else {
+        shopGrid.innerHTML = shop.map(shopCardHTML).join("");
+      }
+    }
+
+    renderMonsters();
+
+    // --- Handle buying monsters from the shop ---
+    shopGrid.addEventListener("click", (e) => {
+      const btn = e.target.closest(".card__buyBtn");
+      if (!btn) return;
+
+      const monsterId = btn.dataset.monsterId;
+      if (!monsterId) return;
+
+      if (monstraBytes < 1) {
+        alert("You need at least 1 Monstra Byte to buy this monster.");
+        return;
+      }
+
+      if (ownedMonsters.includes(monsterId)) {
+        // Just in case
+        return;
+      }
+
+      // Purchase logic
+      monstraBytes -= 1;
+      ownedMonsters.push(monsterId);
+
+      renderBytes();
+      saveUserState();
+      renderMonsters();
     });
   </script>
 
