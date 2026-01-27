@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monstra — Monstra Bytes</title>
+  <link rel="stylesheet" href="./assets/tailwind.css">
+  <!-- <link rel="stylesheet" href="style.css" /> -->
+</head>
+<body class="auth-body">
+
+  <div class="auth-card">
+    <h1 class="auth-title">Monstra Bytes</h1>
+    <p class="auth-sub">In-game currency for your monster bots</p>
+
+    <p class="auth-sub" id="bytesInfo">Loading balance...</p>
+
+    <button id="buyOneBtn">Purchase 1 Monstra Byte</button>
+
+    <p class="auth-alt" style="margin-top: 16px;">
+      Go back to your monsters:
+      <a href="./monsters/">Monsters overview</a>
+    </p>
+  </div>
+
+  <script>
+    // Auth guard
+    const email = localStorage.getItem("monstra_currentUser");
+    if (!email) {
+      window.location.href = "./index.html";
+    }
+
+    // Load user data
+    const users = JSON.parse(localStorage.getItem("monstra_users") || "{}");
+    const user = users[email] || {};
+    if (user.monstraBytes == null) {
+      user.monstraBytes = 0;
+    }
+
+    const bytesInfo = document.getElementById("bytesInfo");
+    const buyOneBtn = document.getElementById("buyOneBtn");
+
+    function renderBytes() {
+      bytesInfo.textContent = `You currently have 🪙 ${user.monstraBytes} Monstra Bytes.`;
+    }
+
+    renderBytes();
+
+    buyOneBtn.addEventListener("click", () => {
+      // Simulate purchasing one byte (no real money)
+      user.monstraBytes += 1;
+      users[email] = user;
+      localStorage.setItem("monstra_users", JSON.stringify(users));
+      renderBytes();
+      alert("You purchased 1 Monstra Byte!");
+    });
+  </script>
+
+</body>
+</html>

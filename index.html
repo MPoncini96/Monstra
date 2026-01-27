@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monstra — Login</title>
+
+  <!-- Tailwind compiled CSS -->
+  <link rel="stylesheet" href="./assets/tailwind.css">
+
+  <!-- Existing styles -->
+  <!-- <link rel="stylesheet" href="style.css" /> -->
+</head>
+<body class="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+  <main class="min-h-screen flex items-center justify-center px-4 py-10">
+    <div class="w-full max-w-md">
+      <!-- Brand / header -->
+      <div class="text-center mb-6">
+        <div class="mx-auto w-12 h-12 rounded-2xl bg-slate-800/70 border border-slate-700 flex items-center justify-center shadow">
+          <span class="text-xl font-black tracking-tight">M</span>
+        </div>
+        <h1 class="mt-4 text-3xl font-extrabold tracking-tight">Welcome to Monstra</h1>
+        <p class="mt-2 text-sm text-slate-300">
+          Log in to manage your Monster Traders
+        </p>
+      </div>
+
+      <!-- Card -->
+      <section class="rounded-2xl border border-slate-800 bg-slate-900/50 backdrop-blur shadow-lg">
+        <div class="p-6 sm:p-8">
+          <form class="auth-form space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-200" for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                required
+                class="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950/40 px-4 py-3 text-slate-100 placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-slate-400/50"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-200" for="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                required
+                class="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950/40 px-4 py-3 text-slate-100 placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-slate-400/50"
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="w-full rounded-xl bg-slate-100 px-4 py-3 text-slate-950 font-semibold shadow hover:bg-white active:scale-[0.99] transition"
+            >
+              Log In
+            </button>
+          </form>
+
+          <div class="mt-6 flex items-center justify-between gap-3">
+            <a href="./register.html" class="text-sm text-slate-300 hover:text-white underline underline-offset-4">
+              Create an account
+            </a>
+
+            <button
+              id="resetAllBtn"
+              type="button"
+              class="text-sm text-slate-400 hover:text-slate-200 underline underline-offset-4"
+            >
+              Reset everything
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <p class="mt-6 text-center text-xs text-slate-500">
+        Monstra is in development — use test accounts for now.
+      </p>
+    </div>
+  </main>
+
+  <!-- Keep your existing scripts -->
+  <script>
+    const form = document.querySelector(".auth-form");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const email = form.querySelector('input[type="email"]').value.trim();
+      const password = form.querySelector('input[type="password"]').value;
+
+      const raw = localStorage.getItem("monstra_users") || "{}";
+      const users = JSON.parse(raw);
+
+      if (!users[email]) {
+        alert("No account found. Try registering.");
+        return;
+      }
+
+      if (users[email].password !== password) {
+        alert("Wrong password.");
+        return;
+      }
+
+      localStorage.setItem("monstra_currentUser", email);
+      window.location.href = "./monsters/";
+    });
+  </script>
+
+  <script>
+    const resetBtn = document.getElementById("resetAllBtn");
+
+    resetBtn.addEventListener("click", () => {
+      const confirmReset = confirm("Delete ALL saved users and logins?");
+      if (!confirmReset) return;
+
+      localStorage.clear();
+      alert("All users cleared. Register again!");
+      location.reload();
+    });
+  </script>
+</body>
+
+<script>
+  const form = document.querySelector(".auth-form");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = form.querySelector('input[type="email"]').value.trim();
+    const password = form.querySelector('input[type="password"]').value;
+
+    const raw = localStorage.getItem("monstra_users") || "{}";
+    const users = JSON.parse(raw);
+
+    if (!users[email]) {
+      alert("No account found. Try registering.");
+      return;
+    }
+
+    if (users[email].password !== password) {
+      alert("Wrong password.");
+      return;
+    }
+
+    // Set logged-in user and redirect
+    localStorage.setItem("monstra_currentUser", email);
+    window.location.href = "./monsters/";
+  });
+  
+</script>
+<script>
+  const resetBtn = document.getElementById("resetAllBtn");
+
+  resetBtn.addEventListener("click", () => {
+    const confirmReset = confirm("Delete ALL saved users and logins?");
+    if (!confirmReset) return;
+
+    localStorage.clear();   // Boom resets everything
+    alert("All users cleared. Register again!");
+    location.reload();      // Page refresh to clean state
+  });
+</script>
+
+ 
+</html>
