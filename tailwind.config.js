@@ -3,14 +3,9 @@ module.exports = {
   content: [
     "./index.html",
     "./pages/**/*.html",
-    "./monsters/**/*.html",
-
-    "./v2/**/*.html",
-    "./v2/**/*.js",
-
     "./js/**/*.js",
+    "./monsters/**/*.html",
     "./src/**/*.{js,html}",
-
     "./node_modules/preline/dist/*.js"
   ],
   theme: { extend: {} },
