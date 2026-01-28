@@ -1,11 +1,21 @@
-export default {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
   content: [
-    "./*.html",
+    "./index.html",
+    "./pages/**/*.html",
     "./monsters/**/*.html",
-    "./js/**/*.js"
+
+    "./v2/**/*.html",
+    "./v2/**/*.js",
+
+    "./js/**/*.js",
+    "./src/**/*.{js,html}",
+
+    "./node_modules/preline/dist/*.js"
   ],
-  theme: {
-    extend: {}
+  theme: { extend: {} },
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: ["light", "dark"],
   },
-  plugins: []
 };
