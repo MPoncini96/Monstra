@@ -22,61 +22,59 @@
       </div>
     </header>
 
-    <!-- HERO -->
-    <section class="relative overflow-hidden">
-      <!-- "cinematic" background -->
-      <div class="absolute inset-0">
-          <div class="absolute inset-0 bg-gradient-to-b from-[#07143a] to-[#2b0b3f]"></div>
-          <div class="absolute -top-32 -left-40 w-[520px] h-[520px] rounded-full blur-3xl opacity-25 bg-[#0f3a6b]"></div>
-          <div class="absolute -bottom-40 -right-40 w-[520px] h-[520px] rounded-full blur-3xl opacity-25 bg-[#4b1a5e]"></div>
-      </div>
+    <!-- HERO VIDEO (LoL-style) -->
+    <section class="relative isolate overflow-hidden">
+      <!-- Full-bleed video -->
+      <video
+        class="absolute inset-0 h-full w-full object-cover"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="/Monstra/assets/img/hero-poster.jpg"
+      >
+        <source src="/Monstra/assets/video/demo.mp4" type="video/mp4" />
+      </video>
 
+      <!-- Dark overlay + vignette -->
+      <div class="absolute inset-0 bg-black/55"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-base-200 via-black/20 to-black/70"></div>
+      <div class="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_75%)] bg-black/40"></div>
+
+      <!-- Content -->
       <div class="relative max-w-6xl mx-auto px-4">
-        <div class="min-h-[74vh] flex items-center py-16">
-          <div class="w-full">
-              
-              <div class="mb-8 -mx-4 px-4">
-                <video class="w-full rounded-lg shadow-lg" autoplay muted loop playsinline preload="metadata">
-                  <source src="/Monstra/assets/video/demo.mp4" type="video/mp4">
-                  Your browser does not support HTML5 video.
-                </video>
-              </div>
-
-            <div class="max-w-2xl">
-
-              <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-                Evolving investment agents.
-              </h1>
-
-              <p class="mt-5 text-lg md:text-xl opacity-80 leading-relaxed">
-                Choose a monster that tracks a simple strategy. Watch it progress through risk-bounded
-                episodes, earn evolution milestones, and learn disciplined investing through gameplay.
-              </p>
-
-              <div class="mt-8 flex flex-col sm:flex-row gap-3">
-                <a class="btn btn-primary btn-lg" href="/Monstra/pages/register.html">Start Free</a>
-                <a class="btn btn-outline btn-lg" href="#monsters">Explore Monsters</a>
-              </div>
-
-              <div class="mt-8 flex items-center gap-6 text-sm opacity-75">
-                <div class="flex items-center gap-2">
-                  <span class="badge badge-success badge-sm"></span>
-                  <span>Long-only starters (VOO / QQQ)</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="badge badge-warning badge-sm"></span>
-                  <span>More monsters coming soon</span>
-                </div>
-              </div>
+        <div class="min-h-[72vh] flex items-end md:items-center py-14">
+          <div class="max-w-2xl pb-10 md:pb-0">
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="badge badge-primary">ALPHA</span>
+              <span class="badge badge-outline">No account needed</span>
+              <span class="badge badge-outline">Rules-first</span>
             </div>
 
-            <!-- Scroll hint -->
-            <div class="mt-16 flex justify-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
+              Evolving investment agents.
+            </h1>
+
+            <p class="mt-4 text-lg md:text-xl opacity-80 leading-relaxed">
+              Pick a monster, run a risk-bounded episode, and evolve through disciplined investing.
+            </p>
+
+            <div class="mt-7 flex flex-col sm:flex-row gap-3">
+              <a class="btn btn-primary btn-lg" href="/Monstra/pages/register.html">Start Free</a>
+              <a class="btn btn-outline btn-lg" href="#monsters">Explore Monsters</a>
+            </div>
+
+            <!-- subtle "scroll" hint -->
+            <div class="mt-10">
               <a href="#pillars" class="btn btn-ghost btn-sm opacity-80">Scroll ↓</a>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Bottom fade into page -->
+      <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-base-200 to-transparent"></div>
     </section>
 
     <!-- PILLARS -->
