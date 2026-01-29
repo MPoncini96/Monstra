@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = loginForm.querySelector('input[type="password"]').value;
 
       if (loginUser(email, password)) {
-        window.location.href = "./monsters/";
+        window.location.href = "./home.html";
       }
     });
   }
