@@ -102,7 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = loginForm.querySelector('input[type="password"]').value;
 
       if (loginUser(email, password)) {
-        window.location.href = "./home.html";
+        // Check if we're in /pages/ directory or root
+        if (window.location.pathname.includes('/pages/')) {
+          window.location.href = "/Monstra/pages/home.html";
+        } else {
+          window.location.href = "./pages/home.html";
+        }
       }
     });
   }
