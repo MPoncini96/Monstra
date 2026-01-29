@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monstra — Register</title>
+  <link rel="stylesheet" href="/Monstra/assets/css/app.css">
+</head>
+
+<body class="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-4 py-10">
+  <div class="w-full max-w-md rounded-2xl bg-slate-900/60 border border-slate-700 p-6 shadow">
+    <h1 class="text-2xl font-extrabold tracking-tight">Create Account</h1>
+    <p class="mt-1 text-sm text-slate-300">Join the monster trading league</p>
+
+    <form class="auth-form mt-6 space-y-3">
+      <input class="w-full rounded-xl bg-slate-950/60 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-500" type="text" placeholder="Username" required />
+      <input class="w-full rounded-xl bg-slate-950/60 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-500" type="email" placeholder="Email" required />
+      <input class="w-full rounded-xl bg-slate-950/60 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-500" type="password" placeholder="Password" required />
+      <input class="w-full rounded-xl bg-slate-950/60 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-500" type="password" placeholder="Confirm Password" required />
+
+      <button class="w-full rounded-xl bg-emerald-600 hover:bg-emerald-500 transition px-4 py-3 font-semibold" type="submit">
+        Register
+      </button>
+    </form>
+
+    <p class="mt-4 text-sm text-slate-300">
+      Already registered?
+      <a class="text-emerald-400 hover:text-emerald-300 underline" href="./login.html">Log in</a>
+    </p>
+  </div>
+
+  <script src="/Monstra/node_modules/preline/dist/preline.js"></script>
+  <script src="/Monstra/js/auth.js"></script>
+  <script>
+    document.querySelector("form.auth-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const [userInput, emailInput, passInput, confirmInput] = e.target.querySelectorAll("input");
+      const username = userInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+      const confirm = confirmInput.value;
+
+      if (registerUser(username, email, password, confirm)) {
+        window.location.href = "../monsters/";
+      }
+    });
+  </script>
+</body>
+</html>
