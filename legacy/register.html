@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Monstra — Register</title>
   <link rel="stylesheet" href="/Monstra/assets/css/app.css">
-
-  <!-- <link rel="stylesheet" href="style.css" /> -->
-
 </head>
 
 <script src="/Monstra/node_modules/preline/dist/preline.js"></script>
@@ -17,7 +14,7 @@
     <h1 class="text-2xl font-extrabold tracking-tight">Create Account</h1>
     <p class="mt-1 text-sm text-slate-300">Join the monster trading league</p>
 
-    <form class="mt-6 space-y-3 auth-form">
+    <form class="auth-form mt-6 space-y-3">
       <input class="w-full rounded-xl bg-slate-950/60 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-500" type="text" placeholder="Username" required />
       <input class="w-full rounded-xl bg-slate-950/60 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-500" type="email" placeholder="Email" required />
       <input class="w-full rounded-xl bg-slate-950/60 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-500" type="password" placeholder="Password" required />
@@ -33,52 +30,22 @@
       <a class="text-emerald-400 hover:text-emerald-300 underline" href="./index.html">Log in</a>
     </p>
   </div>
+
+  <script src="/Monstra/js/auth.js"></script>
+  <script>
+    document.querySelector("form.auth-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const [userInput, emailInput, passInput, confirmInput] = e.target.querySelectorAll("input");
+      const username = userInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+      const confirm = confirmInput.value;
+
+      if (registerUser(username, email, password, confirm)) {
+        window.location.href = "./monsters/";
+      }
+    });
+  </script>
 </body>
-
-<script>
-  const form = document.querySelector(".auth-form");
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const [userInput, emailInput, passInput, confirmInput] = form.querySelectorAll("input");
-    const username = userInput.value.trim();
-    const email = emailInput.value.trim();
-    const password = passInput.value;
-    const confirm = confirmInput.value;
-
-    if (!username || !email || !password) {
-      alert("All fields are required.");
-      return;
-    }
-
-    if (password !== confirm) {
-      alert("Passwords do not match.");
-      return;
-    }
-
-    const raw = localStorage.getItem("monstra_users") || "{}";
-    const users = JSON.parse(raw);
-
-    if (users[email]) {
-      alert("Email already exists. Try logging in.");
-      return;
-    }
-
-    // Store user (prototype only – plaintext password)
-    users[email] = {
-      username,
-      password,
-      monstraBytes: 0   // starting currency
-    };
-
-    localStorage.setItem("monstra_users", JSON.stringify(users));
-
-    // Log them in and go to monsters
-    localStorage.setItem("monstra_currentUser", email);
-    window.location.href = "./monsters/";
-  });
-</script>
-
-
 </html>

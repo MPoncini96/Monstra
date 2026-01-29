@@ -61,65 +61,47 @@
     </section>
   </main>
   
-  <script type="module">
-    // --- Auth guard ---
-    const email = localStorage.getItem("monstra_currentUser");
-    if (!email) {
-      window.location.href = "../index.html";
-    }
+  <script src="/Monstra/js/auth.js"></script>
+  <script>
+    // Auth guard & load user
+    const email = checkAuthGuard();
+    if (!email) return;
 
-    // --- Load user info ---
-    const users = JSON.parse(localStorage.getItem("monstra_users") || "{}");
-    const user = users[email] || {};
-
+    const user = getCurrentUser();
     const username = user.username || "Player";
+    let monstraBytes = user.monstraBytes ?? 0;
+    let ownedMonsters = user.ownedMonsters || [];
 
-    // Make these mutable so we can update when buying monsters
-    let monstraBytes = user.monstraBytes ?? 0;           // treat missing as 0
-    let ownedMonsters = user.ownedMonsters || [];        // array of monster ids
+    // Monsters catalog
+    const monsters = [
+      { id: "tauru", name: "Tauru", baseAsset: "TQQQ", hedgeAsset: "SQQQ" },
+      { id: "aeros", name: "Aeros", baseAsset: "SPY", hedgeAsset: "SH" }
+    ];
 
-    // --- DOM references ---
+    // DOM references
     const usernameTag = document.getElementById("usernameTag");
     const bytesTag = document.getElementById("bytesTag");
     const activeGrid = document.getElementById("activeGrid");
     const shopGrid = document.getElementById("shopGrid");
 
-    // --- Render username ---
-    if (usernameTag) {
-      usernameTag.textContent = `Hi, ${username}!`;
-    }
+    // Render username
+    if (usernameTag) usernameTag.textContent = `Hi, ${username}!`;
 
-    // --- Update header bytes ---
+    // Update header bytes
     function renderBytes() {
-      if (!bytesTag) return;
-      const amountEl = bytesTag.querySelector(".bytes-amount");
-      if (amountEl) {
-        amountEl.textContent = monstraBytes;
-      }
+      const amountEl = bytesTag?.querySelector(".bytes-amount");
+      if (amountEl) amountEl.textContent = monstraBytes;
     }
     renderBytes();
 
-    // --- Save user back to localStorage ---
+    // Save user state
     function saveUserState() {
       user.monstraBytes = monstraBytes;
       user.ownedMonsters = ownedMonsters;
-      users[email] = user;
-      localStorage.setItem("monstra_users", JSON.stringify(users));
+      saveUser(email, user);
     }
 
-    // --- Logout handling ---
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem("monstra_currentUser");
-      window.location.href = "../index.html"; // back to login
-    });
-
-    // --- Monsters catalog (hard-coded for now) ---
-    const monsters = [
-      { id: "tauru",  name: "Tauru",  baseAsset: "TQQQ", hedgeAsset: "SQQQ" },
-      { id: "aeros",  name: "Aeros",  baseAsset: "SPY",  hedgeAsset: "SH"   }
-    ];
-
-    // --- Card templates ---
+    // Card templates
     function ownedCardHTML(m) {
       const preview = `../assets/monsters/${m.id}/preview.png`;
       return `
@@ -127,7 +109,6 @@
           <div class="card__imageWrap">
             <img class="card__image" src="${preview}" alt="${m.name} preview" loading="lazy">
           </div>
-
           <div class="card__body">
             <div class="card__row">
               <div class="card__title">${m.name}</div>
@@ -148,7 +129,6 @@
           <div class="card__imageWrap">
             <img class="card__image" src="${preview}" alt="${m.name} preview" loading="lazy">
           </div>
-
           <div class="card__body">
             <div class="card__row">
               <div class="card__title">${m.name}</div>
@@ -157,10 +137,7 @@
             <div class="card__sub">${m.baseAsset} → ${m.hedgeAsset}</div>
             <div class="card__sub">Sim: +30% / −10%</div>
             <div class="card__price">Price: 1 Monstra Byte</div>
-            <button 
-              class="card__buyBtn" 
-              type="button" 
-              data-monster-id="${m.id}">
+            <button class="card__buyBtn" type="button" data-monster-id="${m.id}">
               Buy for 1 Byte
             </button>
           </div>
@@ -168,56 +145,40 @@
       `;
     }
 
-    // --- Render both sections ---
+    // Render monsters
     function renderMonsters() {
-      // Active monsters
       const owned = monsters.filter(m => ownedMonsters.includes(m.id));
-      if (owned.length === 0) {
-        activeGrid.innerHTML = `
-          <p>You don't have any active monsters yet. Visit the shop below to buy one!</p>
-        `;
-      } else {
-        activeGrid.innerHTML = owned.map(ownedCardHTML).join("");
-      }
+      activeGrid.innerHTML = owned.length === 0
+        ? `<p>You don't have any active monsters yet. Visit the shop below to buy one!</p>`
+        : owned.map(ownedCardHTML).join("");
 
-      // Shop monsters (not owned)
       const shop = monsters.filter(m => !ownedMonsters.includes(m.id));
-      if (shop.length === 0) {
-        shopGrid.innerHTML = `<p>You've purchased all available monsters. 🎉</p>`;
-      } else {
-        shopGrid.innerHTML = shop.map(shopCardHTML).join("");
-      }
+      shopGrid.innerHTML = shop.length === 0
+        ? `<p>You've purchased all available monsters. 🎉</p>`
+        : shop.map(shopCardHTML).join("");
     }
 
     renderMonsters();
 
-    // --- Handle buying monsters from the shop ---
+    // Handle buying monsters
     shopGrid.addEventListener("click", (e) => {
       const btn = e.target.closest(".card__buyBtn");
       if (!btn) return;
 
       const monsterId = btn.dataset.monsterId;
-      if (!monsterId) return;
+      if (!monsterId || ownedMonsters.includes(monsterId)) return;
 
       if (monstraBytes < 1) {
         alert("You need at least 1 Monstra Byte to buy this monster.");
         return;
       }
 
-      if (ownedMonsters.includes(monsterId)) {
-        // Just in case
-        return;
-      }
-
-      // Purchase logic
       monstraBytes -= 1;
       ownedMonsters.push(monsterId);
-
       renderBytes();
       saveUserState();
       renderMonsters();
     });
   </script>
-
 </body>
 </html>
