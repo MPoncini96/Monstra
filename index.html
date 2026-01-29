@@ -22,9 +22,9 @@
       </div>
     </header>
 
-    <!-- HERO VIDEO (LoL-style) -->
-    <section class="relative isolate overflow-hidden">
-      <!-- Full-bleed video -->
+    <!-- HERO VIDEO (League of Legends style) -->
+    <section class="relative isolate overflow-hidden h-screen flex items-end">
+      <!-- Full-screen video background -->
       <video
         class="absolute inset-0 h-full w-full object-cover"
         autoplay
@@ -36,39 +36,29 @@
         <source src="./assets/video/demo.mp4" type="video/mp4" />
       </video>
 
-      <!-- Dark overlay + vignette -->
-      <div class="absolute inset-0 bg-black/55"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-base-200 via-black/20 to-black/70"></div>
-      <div class="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_75%)] bg-black/40"></div>
+      <!-- Left-side dark gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+      
+      <!-- Bottom gradient fade -->
+      <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-base-200 to-transparent"></div>
 
-      <!-- Content -->
-      <div class="relative max-w-6xl mx-auto px-4">
-        <div class="min-h-[72vh] flex items-end md:items-center py-14">
-          <div class="max-w-2xl pb-10 md:pb-0">
+      <!-- Content positioned left-bottom -->
+      <div class="relative z-10 max-w-6xl mx-auto px-4 w-full pb-20">
+        <div class="max-w-xl">
+          <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-4">
+            Evolving investment agents.
+          </h1>
 
-            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-              Evolving investment agents.
-            </h1>
+          <p class="text-lg md:text-xl opacity-90 leading-relaxed mb-8">
+            Pick a monster. Run episodes. Evolve through disciplined investing.
+          </p>
 
-            <p class="mt-4 text-lg md:text-xl opacity-80 leading-relaxed">
-              Pick a monster, run a risk-bounded episode, and evolve through disciplined investing.
-            </p>
-
-            <div class="mt-7 flex flex-col sm:flex-row gap-3">
-              <a class="btn btn-primary btn-lg" href="/Monstra/pages/register.html">Start Free</a>
-              <a class="btn btn-outline btn-lg" href="#monsters">Explore Monsters</a>
-            </div>
-
-            <!-- subtle "scroll" hint -->
-            <div class="mt-10">
-              <a href="#pillars" class="btn btn-ghost btn-sm opacity-80">Scroll ↓</a>
-            </div>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a class="btn btn-primary btn-lg" href="/Monstra/pages/register.html">Start Free</a>
+            <a class="btn btn-outline btn-lg" href="#monsters">Explore Monsters</a>
           </div>
         </div>
       </div>
-
-      <!-- Bottom fade into page -->
-      <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-base-200 to-transparent"></div>
     </section>
 
     <!-- PILLARS -->
