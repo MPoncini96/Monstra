@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monstra — Home</title>
+    <link rel="stylesheet" href="/Monstra/assets/css/app.css" />
+  </head>
+
+  <body class="min-h-screen" style="background: linear-gradient(180deg,#07143a 0%,#2b0b3f 100%) !important; color: #f1f5f9 !important;">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 border-b border-slate-700/40" style="background-color: #0f051a !important;">
+      <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
+        <img src="/Monstra/assets/img/banner-logo.png" alt="Monstra" class="h-12 w-auto">
+        
+        <nav class="flex items-center gap-3">
+          <a href="./monsters.html" class="btn btn-ghost btn-sm">Agents</a>
+          <button id="logoutBtn" class="btn btn-primary btn-sm">Log Out</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO VIDEO (League of Legends style) -->
+    <section class="relative isolate overflow-hidden w-full" style="height: 50vh;">
+      <!-- Full-screen video background -->
+      <video
+        class="absolute inset-0 w-full h-full object-cover"
+        style="object-position: center 50%;"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+      >
+        <source src="../assets/video/Monstra.mp4" type="video/mp4" />
+      </video>
+
+      <!-- Left-side dark gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+      
+      <!-- Bottom gradient fade -->
+      <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-base-200 to-transparent"></div>
+
+      <!-- Content positioned center -->
+      <div class="relative z-10 max-w-6xl mx-auto px-4 w-full h-full flex items-center">
+        <div class="max-w-xl">
+          <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-4">
+            Evolving investment agents.
+          </h1>
+
+          <p class="text-lg md:text-xl opacity-90 leading-relaxed mb-8">
+            Pick a monster. Run episodes. Evolve through disciplined investing.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a class="btn btn-primary btn-lg" href="./monsters.html">View Your Agents</a>
+            <a class="btn btn-outline btn-lg" href="#monsters">Explore Monsters</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PILLARS -->
+    <section id="pillars" class="max-w-6xl mx-auto px-4 py-14">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card bg-base-100 shadow-xl border border-base-300/40">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <h3 class="card-title">Choose a Monster</h3>
+              <span class="badge badge-outline">Roster</span>
+            </div>
+            <p class="opacity-75">
+              Start with simple long-only agents. Each has a style, rules, and an evolution path.
+            </p>
+          </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl border border-base-300/40">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <h3 class="card-title">Risk Rules Built-In</h3>
+              <span class="badge badge-outline">Discipline</span>
+            </div>
+            <p class="opacity-75">
+              Episodes are bounded (win X% / lose Y% / exit anytime). The rules prevent chaos.
+            </p>
+          </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl border border-base-300/40">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <h3 class="card-title">Evolve & Unlock</h3>
+              <span class="badge badge-outline">Game Loop</span>
+            </div>
+            <p class="opacity-75">
+              Earn milestones, unlock upgrades, and discover new monsters as the platform grows.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MONSTERS (Roster) -->
+    <section id="monsters" class="max-w-6xl mx-auto px-4 pb-16">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Monsters</h2>
+          <p class="mt-2 opacity-75">Starter roster — built for stability and clarity.</p>
+        </div>
+        <a class="btn btn-outline btn-sm hidden sm:inline-flex" href="./monsters.html">
+          View Full Roster
+        </a>
+      </div>
+
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Tauru -->
+        <div class="card bg-base-100 shadow-xl border border-base-300/40 hover:scale-[1.01] transition">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="card-title">Tauru</h3>
+                <p class="text-sm opacity-70">VOO · Long-only · Low volatility</p>
+              </div>
+              <span class="badge badge-success">Common</span>
+            </div>
+
+            <div class="mt-4 grid grid-cols-2 gap-3">
+              <div class="p-3 rounded-xl bg-base-200/60 border border-base-300/40">
+                <div class="text-xs opacity-70">Win / Lose</div>
+                <div class="font-semibold">+20% / -10%</div>
+              </div>
+              <div class="p-3 rounded-xl bg-base-200/60 border border-base-300/40">
+                <div class="text-xs opacity-70">Tempo</div>
+                <div class="font-semibold">Steady</div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <div class="flex items-center justify-between text-sm mb-1">
+                <span class="opacity-70">Evolution</span>
+                <span class="opacity-70">35%</span>
+              </div>
+              <progress class="progress progress-primary w-full" value="35" max="100"></progress>
+            </div>
+
+            <div class="mt-5 flex items-center justify-between">
+              <div class="flex gap-2">
+                <span class="badge badge-outline">Starter</span>
+                <span class="badge badge-outline">1x</span>
+              </div>
+              <a class="btn btn-primary btn-sm" href="./monsters.html">View</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aeros -->
+        <div class="card bg-base-100 shadow-xl border border-base-300/40 hover:scale-[1.01] transition">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="card-title">Aeros</h3>
+                <p class="text-sm opacity-70">QQQ · Long-only · Higher volatility</p>
+              </div>
+              <span class="badge badge-warning">Rare</span>
+            </div>
+
+            <div class="mt-4 grid grid-cols-2 gap-3">
+              <div class="p-3 rounded-xl bg-base-200/60 border border-base-300/40">
+                <div class="text-xs opacity-70">Win / Lose</div>
+                <div class="font-semibold">+25% / -12%</div>
+              </div>
+              <div class="p-3 rounded-xl bg-base-200/60 border border-base-300/40">
+                <div class="text-xs opacity-70">Tempo</div>
+                <div class="font-semibold">Aggressive</div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <div class="flex items-center justify-between text-sm mb-1">
+                <span class="opacity-70">Evolution</span>
+                <span class="opacity-70">55%</span>
+              </div>
+              <progress class="progress progress-secondary w-full" value="55" max="100"></progress>
+            </div>
+
+            <div class="mt-5 flex items-center justify-between">
+              <div class="flex gap-2">
+                <span class="badge badge-outline">Starter</span>
+                <span class="badge badge-outline">1x</span>
+              </div>
+              <a class="btn btn-secondary btn-sm" href="./monsters.html">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coming soon row -->
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card bg-base-100/70 border border-base-300/40">
+          <div class="card-body">
+            <h3 class="card-title opacity-80">???</h3>
+            <p class="opacity-60">Locked — coming soon</p>
+            <span class="badge badge-outline w-fit">Epic</span>
+          </div>
+        </div>
+        <div class="card bg-base-100/70 border border-base-300/40">
+          <div class="card-body">
+            <h3 class="card-title opacity-80">???</h3>
+            <p class="opacity-60">Locked — coming soon</p>
+            <span class="badge badge-outline w-fit">Mythic</span>
+          </div>
+        </div>
+        <div class="card bg-base-100/70 border border-base-300/40">
+          <div class="card-body">
+            <h3 class="card-title opacity-80">???</h3>
+            <p class="opacity-60">Locked — coming soon</p>
+            <span class="badge badge-outline w-fit">Legendary</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="border-t border-base-300/40 bg-base-100/40">
+      <div class="max-w-6xl mx-auto px-4 py-16">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight">How it works</h2>
+        <p class="mt-2 opacity-75">Simple loop. Clear rules. Addictive progression.</p>
+
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="card bg-base-100 shadow-xl border border-base-300/40">
+            <div class="card-body">
+              <div class="text-sm opacity-70">Step 1</div>
+              <h3 class="card-title">Pick a monster</h3>
+              <p class="opacity-75">Start with VOO or QQQ. Learn the style and the risk limits.</p>
+            </div>
+          </div>
+
+          <div class="card bg-base-100 shadow-xl border border-base-300/40">
+            <div class="card-body">
+              <div class="text-sm opacity-70">Step 2</div>
+              <h3 class="card-title">Run an episode</h3>
+              <p class="opacity-75">Track performance until a win/loss threshold hits (or exit early).</p>
+            </div>
+          </div>
+
+          <div class="card bg-base-100 shadow-xl border border-base-300/40">
+            <div class="card-body">
+              <div class="text-sm opacity-70">Step 3</div>
+              <h3 class="card-title">Evolve</h3>
+              <p class="opacity-75">Win episodes → level up. Unlock rarities, cosmetics, and new agents.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSPARENCY -->
+    <section id="transparency" class="max-w-6xl mx-auto px-4 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Transparency</h2>
+          <p class="mt-3 opacity-75 leading-relaxed">
+            Monstra is built on historical market data and clear, explainable rules.
+            Each monster includes a backtest summary and a plain-English explanation.
+          </p>
+
+          <div class="mt-6 flex gap-3">
+            <a class="btn btn-outline" href="./monsters.html">See Backtests</a>
+            <a class="btn btn-primary" href="./monsters.html">View Your Agents</a>
+          </div>
+
+          <p class="mt-4 text-xs opacity-60">
+            Not financial advice. Monstra is an educational game-like interface for exploring strategy behavior.
+          </p>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl border border-base-300/40">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <h3 class="card-title">Sample Backtest Card</h3>
+              <span class="badge badge-outline">Preview</span>
+            </div>
+
+            <div class="mt-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="opacity-70">CAGR</span>
+                <span class="font-semibold">—</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="opacity-70">Max Drawdown</span>
+                <span class="font-semibold">—</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="opacity-70">Win Rate (episodes)</span>
+                <span class="font-semibold">—</span>
+              </div>
+              <div class="mt-3">
+                <div class="flex items-center justify-between text-sm mb-1">
+                  <span class="opacity-70">Data Integration</span>
+                  <span class="opacity-70">Soon</span>
+                </div>
+                <progress class="progress progress-accent w-full" value="20" max="100"></progress>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA STRIP -->
+    <section class="border-t border-base-300/40 bg-base-100/50">
+      <div class="max-w-6xl mx-auto px-4 py-14 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <h3 class="text-2xl font-bold">Ready to start an episode?</h3>
+          <p class="opacity-75 mt-1">Choose an agent and begin your investment journey.</p>
+        </div>
+        <div class="flex gap-3">
+          <a class="btn btn-outline" href="#monsters">Explore Monsters</a>
+          <a class="btn btn-primary" href="./monsters.html">View Your Agents</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="max-w-6xl mx-auto px-4 py-10 opacity-70">
+      <div class="flex flex-col md:flex-row justify-between gap-6">
+        <div>
+          <div class="font-bold opacity-90">Monstra</div>
+          <div class="text-sm">Gamified investing strategy exploration.</div>
+        </div>
+        <div class="text-sm space-y-1">
+          <div class="opacity-80">© <span id="year"></span> Monstra</div>
+          <div class="opacity-70">Not financial advice. For educational purposes.</div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/Monstra/js/auth.js"></script>
+    <script src="/Monstra/vendor/preline.js"></script>
+    <script>
+      // Auth guard - redirect to login if not logged in
+      checkAuthGuard();
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
