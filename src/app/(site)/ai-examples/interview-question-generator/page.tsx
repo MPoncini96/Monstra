@@ -1,3 +1,12 @@
+export const dynamic = "force-dynamic";
+
+const InterviewQuestionGeneratorPage = () => {
+  return null;
+};
+
+export default InterviewQuestionGeneratorPage;
+
+/* Disabled
 "use client";
 import PreviewGeneratedText from "@/components/AiTools/PreviewGeneratedText";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -11,7 +20,7 @@ const dataSchema = z.object({
   description: z.string(),
 });
 
-const InterviewQuestionGeneratorPage = () => {
+const _InterviewQuestionGeneratorPage = () => {
   const [generatedContent, setGeneratedContent] = useState("");
   const [data, setData] = useState({
     description: "",

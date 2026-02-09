@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -50,12 +49,6 @@ const Hero = () => {
             startup.
           </p>
 
-          <Link
-            href='/ai-examples'
-            className='hero-button-gradient inline-flex rounded-lg px-7 py-3 font-medium text-white duration-300 ease-in hover:opacity-80'
-          >
-            Try AI Examples
-          </Link>
         </div>
       </div>
 

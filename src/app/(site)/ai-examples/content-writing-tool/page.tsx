@@ -1,3 +1,13 @@
+export const dynamic = "force-dynamic";
+
+const ContentGeneratorPage = () => {
+  return null;
+};
+
+export default ContentGeneratorPage;
+
+// Disabled content below
+/*
 "use client";
 import Options from "@/components/AiTools/Options";
 import PreviewGeneratedText from "@/components/AiTools/PreviewGeneratedText";
@@ -17,7 +27,7 @@ const ContentGeneratorSchema = z.object({
 const paragraphsCount = [1, 2, 3, 4, 5];
 const contentTypes = ["Article", "Listicles", "How to guides", "Tweet"];
 
-const ContentGeneratorPage = () => {
+const _ContentGeneratorPage = () => {
   const [generatedContent, setGeneratedContent] = useState("");
   const [data, setData] = useState({
     contentTopic: "",
@@ -93,73 +103,10 @@ const ContentGeneratorPage = () => {
     });
   };
 
-  return (
-    <>
-      <title>Content Generator| AI Tool - Next.js Template for AI Tools</title>
-      <meta name="description" content="This is AI Examples page for AI Tool" />
-      <Breadcrumb pageTitle="Content Generator" />
-
-      <section className="pb-17.5 lg:pb-22.5 xl:pb-27.5">
-        {/* <div className="gradient-box">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
-            bibendum, lorem vel tincidunt imperdiet, nibh elit laoreet felis, a
-            bibendum nisl tortor non orci. Donec pretium fermentum felis, quis
-            aliquet est rutrum ut. Integer quis massa ut lacus viverra pharetra
-            in eu lacus. Aliquam tempus odio adipiscing diam pellentesque
-            rhoncus. Curabitur a bibendum est.{" "}
-          </p>
-        </div> */}
-
-        <div className="mx-auto grid max-w-[1170px] gap-8 px-4 sm:px-8 lg:grid-cols-12 xl:px-0">
-          <div className="gradient-box rounded-lg bg-dark-8 p-8 lg:col-span-4">
-            <h2 className="pb-2 text-2xl font-bold text-white">
-              Content Topic
-            </h2>
-            <p className="pb-6">What your content will be about?</p>
-            <form onSubmit={handleSubmit}>
-              <textarea
-                value={data.contentTopic}
-                name="contentTopic"
-                onChange={handleChange}
-                className="min-h-[160px] w-full rounded-lg border border-white/[0.12] bg-dark-7 p-5 text-white outline-hidden focus:border-purple"
-                placeholder="Type your topic"
-                required
-              />
-
-              <Options
-                values={paragraphsCount}
-                title={"Number of Paragraphs"}
-                name={"numberOfParagraphs"}
-                handleChange={handleChange}
-                selected={data.numberOfParagraphs}
-              />
-
-              <Options
-                values={contentTypes}
-                title={"Select Type"}
-                name={"contentType"}
-                handleChange={handleChange}
-                selected={data.contentType}
-              />
-
-              <button
-                type="submit"
-                className="hero-button-gradient mt-5 w-full rounded-lg px-7 py-3 text-center font-medium text-white duration-300 ease-in hover:opacity-80 "
-              >
-                Generate
-              </button>
-            </form>
-          </div>
-
-          <PreviewGeneratedText
-            generatedContent={generatedContent}
-            height={442}
-          />
-        </div>
-      </section>
-    </>
-  );
+  return null;
 };
 
 export default ContentGeneratorPage;
+
+// Disabled - all content below commented out
+*/

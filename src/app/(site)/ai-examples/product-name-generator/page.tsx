@@ -1,3 +1,12 @@
+export const dynamic = "force-dynamic";
+
+const ProductNameGeneratorPage = () => {
+  return null;
+};
+
+export default ProductNameGeneratorPage;
+
+/* Disabled
 "use client";
 import PreviewGeneratedText from "@/components/AiTools/PreviewGeneratedText";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -12,7 +21,7 @@ const dataSchema = z.object({
   seedWords: z.string(),
 });
 
-const ProductNameGeneratorPage = () => {
+const _ProductNameGeneratorPage = () => {
   const [generatedContent, setGeneratedContent] = useState("");
   const [data, setData] = useState({
     description: "",

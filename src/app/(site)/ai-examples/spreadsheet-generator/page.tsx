@@ -1,3 +1,12 @@
+export const dynamic = "force-dynamic";
+
+const SpreadsheetGeneratorPage = () => {
+  return null;
+};
+
+export default SpreadsheetGeneratorPage;
+
+/* Disabled
 "use client";
 import PreviewGeneratedText from "@/components/AiTools/PreviewGeneratedText";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -11,7 +20,7 @@ const dataSchema = z.object({
   description: z.string(),
 });
 
-const SpreadsheetGeneratorPage = () => {
+const _SpreadsheetGeneratorPage = () => {
   const [generatedContent, setGeneratedContent] = useState("");
   const [data, setData] = useState({
     description: "",
