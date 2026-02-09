@@ -1,34 +1,11 @@
-import { prisma } from "@/libs/prismaDB";
-import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 
-export async function POST(request: any) {
-  const body = await request.json();
-  const { name, email, password } = body;
-
-  if (!name || !email || !password) {
-    return new NextResponse("Missing Fields", { status: 400 });
-  }
-
-  const exist = await prisma.user.findUnique({
-    where: {
-      email,
+export async function POST(_request: any) {
+  return NextResponse.json(
+    {
+      error:
+        "Registration is disabled because the database layer was removed.",
     },
-  });
-
-  if (exist) {
-    throw new Error("Email already exists");
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    },
-  });
-
-  return NextResponse.json(user);
+    { status: 501 },
+  );
 }

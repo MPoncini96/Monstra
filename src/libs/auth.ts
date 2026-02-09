@@ -1,6 +1,3 @@
-import { prisma } from "@/libs/prismaDB";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import bcrypt from "bcrypt";
 import { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
@@ -11,7 +8,6 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
   },
-  adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET || process.env.SECRET,
   session: {
     strategy: "jwt",
@@ -27,34 +23,13 @@ export const authOptions: NextAuthOptions = {
       },
 
       async authorize(credentials) {
-        // check to see if eamil and password is there
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Please enter an email or password");
         }
 
-        // check to see if user already exist
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
-        });
-
-        // if user was not found
-        if (!user || !user?.password) {
-          throw new Error("No user found");
-        }
-
-        // check to see if passwords match
-        const passwordMatch = await bcrypt.compare(
-          credentials.password,
-          user.password,
+        throw new Error(
+          "Credentials sign-in is disabled because the database layer was removed.",
         );
-
-        if (!passwordMatch) {
-          throw new Error("Incorrect password");
-        }
-
-        return user;
       },
     }),
 
