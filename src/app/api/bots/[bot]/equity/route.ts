@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Pool } from "pg";
 
 const pool = new Pool({
@@ -6,13 +6,13 @@ const pool = new Pool({
 });
 
 export async function GET(
-  req: Request,
-  { params }: { params: { bot: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ bot: string }> }
 ) {
   const { searchParams } = new URL(req.url);
   const start = searchParams.get("start");
   const end = searchParams.get("end");
-  const bot = params.bot;
+  const { bot } = await params;
 
   if (!start || !end) {
     return NextResponse.json({ error: "Missing start/end" }, { status: 400 });
