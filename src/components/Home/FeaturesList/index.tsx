@@ -8,42 +8,42 @@ const featuresData: Feature[] = [
     id: 1,
     title: "Strategy AI Assistants",
     description:
-      "Learn faster with AI-powered strategy analysis. Monstra reviews trades, explains outcomes, and helps you refine your monster's behavior.",
+      "Learn faster with AI-powered strategy insights. Monstra analyzes performance, explains outcomes, and helps you improve your trading bots over time.",
     icon: "/images/features/icon-01.svg",
   },
   {
     id: 2,
     title: "Real Market Data",
-    description: "Strategies run on real historical market data. See how your monster would perform across bull markets, crashes, and everything in between.",
+    description: "All strategies run on real historical and live market data. See how each bot performs across bull markets, downturns, and changing conditions.",
     icon: "/images/features/icon-02.svg",
   },
   {
     id: 3,
-    title: "Secure Player Accounts",
+    title: "Your Virtual Portfolio",
     description:
-      "Create monsters, track performance, and build your strategy portfolio safely in your personal arena.",
+      "Allocate virtual capital to bots, rebalance your portfolio, and track how your strategy allocations grow or shrink over time.",
     icon: "/images/features/icon-03.svg",
   },
   {
     id: 4,
     title: "Automated Strategy Simulation",
     description:
-      "Deploy monsters that trade continuously in a controlled simulation environment: no real money required.",
+      "Every bot runs continuously inside a controlled simulation environment — no real money required.",
     icon: "/images/features/icon-04.svg",
     rotate: true,
   },
   {
     id: 5,
-    title: "Build or Battle Strategies",
+    title: "Build or Submit Your Own Bots",
     description:
-      "Create your own trading algorithms or compete against other players in 1v1 and 5v5 strategy battles.",
+      "Develop trading algorithms, submit them to the platform, and compare their performance against Monstra and community strategies.",
     icon: "/images/features/icon-05.svg",
     rotate: true,
   },
   {
     id: 6,
-    title: "Transparent Performance Tracking",
-    description: "Every trade is logged. Every decision is visible. Understand why your monstrosities succeed.",
+    title: "Leaderboards & Transparent Performance",
+    description: "Compete on global leaderboards and explore fully transparent performance data for every bot and portfolio.",
     icon: "/images/features/icon-06.svg",
     rotate: true,
   },

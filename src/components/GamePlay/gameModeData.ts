@@ -2,44 +2,43 @@ export const gameModeData = [
   {
     id: "price_1NQk5TLtGdPVhGLecVfQ7mn0",
     unit_amount: 100 * 100,
-    nickname: "Market Arena",
-    title: "Market Arena",
-    subtitle: "Compete vs the Market",
-    description: "Battle the S&P 500, NASDAQ or top-performing stocks. Can your monstra bot beat real market trends?",
+    nickname: "Portfolio Simulator",
+    title: "Portfolio Simulator",
+    subtitle: "Build portfolios. Track performance. Learn what works.",
+    description: "Allocate virtual capital to trading bots and see how your portfolio performs against real market benchmarks.",
     features: [
-      "Trade against real historical market data or live market conditions",
-      "Compete vs market benchmarks and top stocks",
-      "Learn how strategies perform across bull & bear cycles",
-      "Perfect for testing new monsters"
+      "Compare your portfolio vs the S&P 500 and major indices",
+      "Track performance across different market cycles",
+      "Rebalance and experiment with new allocations anytime",
+      "Perfect for learning and testing strategies risk-free"
     ]
   },
   {
     id: "price_1NQk5TLtGdPVhGLecVfQ7mn0",
     unit_amount: 100 * 100,
-    nickname: "Bot Battles",
-    title: "Bot Battles",
-    subtitle: "It's bot against bot. ",
-    description: "Challenge your bots in strategy duels and team competitions. Compete against Monstra bots, or bots created by other users.",
+    nickname: "Bot Marketplace",
+    title: "Bot Marketplace",
+    subtitle: "Discover and back the best strategies.",
+    description: "Explore trading bots created by Monstra and the community. Subscribe to the strategies you believe in and see how they perform side-by-side.",
     features: [
-      "1v1 strategy duels",
-      "5v5 team battles",
-      "Ranked performance leaderboards",
-      "Watch monsters evolve through competition",
-      "New opponents every season."
+      "Browse official and community-created bots",
+      "Compare performance, subscribers, and track records",
+      "Subscribe to bots you want in your portfolio",
+      "Submit your own bot and grow your audience"
     ]
   },
   {
     id: "price_1NQk5TLtGdPVhGLecVfQ7mn0",
     unit_amount: 100 * 100,
-    nickname: "Rewards",
-    title: "Rewards & Progression",
-    subtitle: "Earn Monstra Bytes",
-    description: "Win rewards and grow your monster collection.",
+    nickname: "Leaderboards & Earnings",
+    title: "Leaderboards & Earnings",
+    subtitle: "Compete, climb rankings, and earn.",
+    description: "Performance drives recognition on Monstra. Users and creators are ranked based on real results from the simulator.",
     features: [
-      "Earn Monstra Bytes for strong performance",
-      "Unlock and purchase new monsters",
-      "Expand your strategy roster",
-      "Progress through seasonal events"
+      "Global leaderboards for top portfolios and top bots",
+      "Track subscribers and capital allocated to each bot",
+      "Creators earn revenue when users subscribe to their bots",
+      "Build a reputation as a top strategy creator"
     ]
   },
 ];

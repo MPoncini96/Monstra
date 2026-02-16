@@ -57,16 +57,15 @@ const CallToAction = () => {
 
             <div className="wow fadeInUp text-left relative z-10">
               <h2 className="mb-4.5 text-2xl font-extrabold text-white sm:text-4xl xl:text-heading-2">
-                A platform for trading and portfolio management.
+                A platform for trading strategy simulation and portfolio management.
               </h2>
               <p className="mb-9 font-medium text-white text-lg">
-                Monstra reimagines algorithmic trading as an interactive experience. Users deploy evolving strategy agents, track performance, and learn how market behavior shapes outcomes within a controlled, simulated environment.
+                Monstra reimagines algorithmic trading as an interactive, simulated experience. Users allocate virtual capital to strategy “Monsters,” track performance over time, and learn how different approaches behave under real market conditions — all in a risk-free environment.
               </p>
               <p className="mb-9 font-medium text-white text-lg">
-                Users can create and submit their own trading algorithms, backtest them, and refine their strategies over time. Monstra introduces competitive simulations where users pit their agents against others in head-to-head or team-based matchups, all under identical market conditions.
-              </p>
+                Explore and subscribe to bots created by Monstra and the community, build your own virtual portfolio, and compete on leaderboards to see who can grow their capital the fastest. Developers can submit their own trading algorithms, compare results against other strategies, and earn revenue when users subscribe to their bots.              </p>
               <p className="mb-9 font-medium text-white text-lg">
-                By combining creation, iteration, and competition, Monstra transforms algorithmic trading into a gamified and collaborative learning experience.              </p>
+                By combining strategy creation, portfolio management, and community competition, Monstra turns algorithmic trading into a collaborative, gamified learning platform. </p>
             </div>
           </div>
 

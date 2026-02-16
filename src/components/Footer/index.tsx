@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../../../public/images/logo/logo.png";
-import FooterLinkList from "./FooterLinkList";
-import { companiesLink, productsLink, supportsLink } from "./linksData";
 
 const Footer = () => {
   return (
@@ -43,11 +41,6 @@ const Footer = () => {
 
             <div className="w-full max-w-[571px]">
               <div className="flex flex-col gap-10 sm:flex-row sm:justify-between">
-                <FooterLinkList title="Products" links={productsLink} />
-
-                <FooterLinkList title="Company" links={companiesLink} />
-
-                <FooterLinkList title="Support" links={supportsLink} />
               </div>
             </div>
           </div>

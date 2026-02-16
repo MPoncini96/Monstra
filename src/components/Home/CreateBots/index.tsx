@@ -49,7 +49,7 @@ const CreateBots = () => {
               Create Monstra Bots
             </h2>
             <p className="mb-9 font-medium text-white text-lg">
-            Design and deploy custom trading algorithms in Monstra’s simulation environment. Test, refine, and compete in real market conditions — then submit your best-performing bots to the Monstra marketplace and earn monthly Stripe payouts based on how often other players use your strategies.            </p>
+            Design and deploy custom trading algorithms in Monstra's simulation environment. Backtest, refine, and compare your strategies using real market data — then submit your best bots to the Monstra marketplace and earn monthly Stripe payouts when users subscribe to your strategies.            </p>
           </div>
         </div>
       </div>
