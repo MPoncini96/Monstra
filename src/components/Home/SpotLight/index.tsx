@@ -12,7 +12,7 @@ const FeaturesList = () => {
 
   return (
     <section suppressHydrationWarning>
-      <div className="mx-auto max-w-full px-0">
+      <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
         <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-7.5 items-stretch">
           {/* Left Box */}
           <div className="h-full">
