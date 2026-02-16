@@ -1,16 +1,36 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 
 export default function VecturaPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     if (videoRef.current) videoRef.current.playbackRate = 0.5;
   }, []);
 
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const start = "2026-01-01";
+
+    fetch(`/api/bots/vectura/equity?start=${start}&end=${today}`)
+      .then((r) => r.json())
+      .then(setData);
+  }, []);
+
   return (
+    <>
     <section suppressHydrationWarning className="py-20">
       <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
         <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-7.5 items-stretch">
@@ -107,5 +127,23 @@ export default function VecturaPage() {
         </div>
       </div>
     </section>
+
+    <section suppressHydrationWarning className="py-20">
+      <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
+        <h2 className="text-3xl font-bold text-white mb-8">Performance</h2>
+        <div className="w-full h-[400px] bg-dark rounded-xl p-6">
+          <ResponsiveContainer>
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+              <XAxis dataKey="d" stroke="rgba(255,255,255,0.5)" />
+              <YAxis domain={["auto", "auto"]} stroke="rgba(255,255,255,0.5)" />
+              <Tooltip />
+              <Line type="monotone" dataKey="equity" dot={false} stroke="#8646f4" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </section>
+    </>
   );
 }
