@@ -134,14 +134,27 @@ export default function VisPage() {
     <section suppressHydrationWarning className="py-20">
       <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
         <h2 className="text-3xl font-bold text-white mb-8">Performance</h2>
-        <div className="w-full h-[400px] bg-dark rounded-xl p-6">
+        <div className="w-full h-[400px] bg-black rounded-xl p-6 border border-white/10">
           <ResponsiveContainer>
             <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-              <XAxis dataKey="d" stroke="rgba(255,255,255,0.5)" />
-              <YAxis domain={["auto", "auto"]} stroke="rgba(255,255,255,0.5)" />
-              <Tooltip />
-              <Line type="monotone" dataKey="equity" dot={false} stroke="#8646f4" strokeWidth={2} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(181, 108, 255, 0.25)" />
+              <XAxis dataKey="d" stroke="rgba(181, 108, 255, 0.85)" />
+              <YAxis domain={["auto", "auto"]} stroke="rgba(181, 108, 255, 0.85)" />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#0b0614",
+                  borderColor: "#b56cff",
+                  color: "#f2e9ff",
+                }}
+                labelStyle={{ color: "#d6c4ff" }}
+              />
+              <Line
+                type="monotone"
+                dataKey="equity"
+                dot={false}
+                stroke="#b56cff"
+                strokeWidth={2}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
