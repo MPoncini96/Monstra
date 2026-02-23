@@ -22,7 +22,7 @@ export async function GET(
     );
   }
 
-  let client;
+  let client: Client | undefined;
   try {
     console.log(`Fetching equity data for bot: ${bot}, range: ${start} to ${end}`);
     client = new Client({
@@ -75,10 +75,12 @@ export async function GET(
       { status: 500 }
     );
   } finally {
-    try {
-      await client.end();
-    } catch (err) {
-      console.error("Error closing database connection:", err);
+    if (client) {
+      try {
+        await client.end();
+      } catch (err) {
+        console.error("Error closing database connection:", err);
+      }
     }
   }
 }
