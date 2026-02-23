@@ -9,36 +9,172 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  Legend,
 } from "recharts";
 
 export default function BotPage({ params }: { params: { bot: string } }) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const today = new Date().toISOString().slice(0, 10);
-    const start = "2026-01-01";
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const today = new Date().toISOString().slice(0, 10);
+        const start = "2026-01-01";
 
-    fetch(`/api/bots/${params.bot}/equity?start=${start}&end=${today}`)
-      .then((r) => r.json())
-      .then(setData);
+        const response = await fetch(
+          `/api/bots/${params.bot}/equity?start=${start}&end=${today}`
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const details = errorData.details || errorData.error || `HTTP ${response.status}`;
+          throw new Error(details);
+        }
+
+        const equityData = await response.json();
+
+        if (!Array.isArray(equityData)) {
+          throw new Error("Invalid response format: expected an array");
+        }
+
+        if (equityData.length === 0) {
+          setData([]);
+          setError(null);
+          return;
+        }
+
+        // Transform data to include formatted dates and calculated metrics
+        const transformedData = equityData.map(
+          (item: { d: string; equity: number }, index: number) => {
+            const dailyReturn =
+              index > 0
+                ? parseFloat(
+                    (
+                      ((item.equity - equityData[index - 1].equity) /
+                        equityData[index - 1].equity) *
+                      100
+                    ).toFixed(2)
+                  )
+                : 0;
+
+            return {
+              ...item,
+              date: new Date(item.d).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              }),
+              dailyReturn,
+            };
+          }
+        );
+
+        setData(transformedData);
+        setError(null);
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "An error occurred fetching data";
+        console.error("Bot data fetch error:", errorMessage);
+        setError(errorMessage);
+        setData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [params.bot]);
+
+  if (loading) {
+    return (
+      <div className="p-10">
+        <div className="text-center text-gray-500">Loading bot data...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-10">
+        <div className="text-center text-red-500">Error: {error}</div>
+      </div>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <div className="p-10">
+        <div className="text-center text-gray-500">No data available</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-10 space-y-8">
-      <h1 className="text-3xl font-bold capitalize">
-        {params.bot} Performance
-      </h1>
+      <h1 className="text-3xl font-bold capitalize">{params.bot} Performance</h1>
 
-      <div className="w-full h-[400px] bg-white rounded-xl p-6">
-        <ResponsiveContainer>
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="d" />
-            <YAxis domain={["auto", "auto"]} />
-            <Tooltip />
-            <Line type="monotone" dataKey="equity" dot={false} strokeWidth={2} />
-          </LineChart>
-        </ResponsiveContainer>
+      {/* Equity Chart */}
+      <div className="bg-white rounded-xl p-6 shadow-md">
+        <h2 className="text-xl font-semibold mb-4">Equity Curve</h2>
+        <div className="w-full h-[400px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip
+                formatter={(value) => {
+                  if (typeof value === "number") {
+                    return value.toFixed(4);
+                  }
+                  return value;
+                }}
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="equity"
+                stroke="#3b82f6"
+                dot={false}
+                strokeWidth={2}
+                name="Equity"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Daily Returns Chart */}
+      <div className="bg-white rounded-xl p-6 shadow-md">
+        <h2 className="text-xl font-semibold mb-4">Daily Returns (%)</h2>
+        <div className="w-full h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip
+                formatter={(value) => {
+                  if (typeof value === "number" || typeof value === "string") {
+                    return `${value}%`;
+                  }
+                  return value;
+                }}
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="dailyReturn"
+                stroke="#10b981"
+                dot={false}
+                strokeWidth={2}
+                name="Daily Return"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

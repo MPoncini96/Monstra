@@ -14,19 +14,77 @@ import {
 
 export default function ImperiumPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (videoRef.current) videoRef.current.playbackRate = 0.5;
   }, []);
 
   useEffect(() => {
-    const today = new Date().toISOString().slice(0, 10);
-    const start = "2026-01-01";
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const today = new Date().toISOString().slice(0, 10);
+        const start = "2026-01-01";
 
-    fetch(`/api/bots/imperium/equity?start=${start}&end=${today}`)
-      .then((r) => r.json())
-      .then(setData);
+        const response = await fetch(
+          `/api/bots/imperium/equity?start=${start}&end=${today}`
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(
+            errorData.error || `HTTP ${response.status}: Failed to fetch bot data`
+          );
+        }
+
+        const equityData = await response.json();
+
+        if (!Array.isArray(equityData)) {
+          throw new Error("Invalid response format: expected an array");
+        }
+
+        // Transform data to ensure proper format for Recharts
+        const transformedData = equityData.map(
+          (item: { d: string; equity: number }, index: number) => {
+            const dailyReturn =
+              index > 0
+                ? parseFloat(
+                    (
+                      ((item.equity - equityData[index - 1].equity) /
+                        equityData[index - 1].equity) *
+                      100
+                    ).toFixed(2)
+                  )
+                : 0;
+
+            return {
+              ...item,
+              d: new Date(item.d).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              }),
+              dailyReturn,
+            };
+          }
+        );
+
+        setData(transformedData);
+        setError(null);
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "An error occurred fetching data";
+        console.error("Bot data fetch error:", errorMessage);
+        setError(errorMessage);
+        setData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -132,28 +190,45 @@ export default function ImperiumPage() {
       <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
         <h2 className="text-3xl font-bold text-white mb-8">Performance</h2>
         <div className="w-full h-[400px] bg-black rounded-xl p-6 border border-white/10">
-          <ResponsiveContainer>
-            <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(181, 108, 255, 0.25)" />
-              <XAxis dataKey="d" stroke="rgba(181, 108, 255, 0.85)" />
-              <YAxis domain={["auto", "auto"]} stroke="rgba(181, 108, 255, 0.85)" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#0b0614",
-                  borderColor: "#b56cff",
-                  color: "#f2e9ff",
-                }}
-                labelStyle={{ color: "#d6c4ff" }}
-              />
-              <Line
-                type="monotone"
-                dataKey="equity"
-                dot={false}
-                stroke="#b56cff"
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          {loading && (
+            <div className="flex items-center justify-center h-full text-white/60">
+              Loading bot data...
+            </div>
+          )}
+          {error && (
+            <div className="flex items-center justify-center h-full text-red-400">
+              Error: {error}
+            </div>
+          )}
+          {!loading && !error && data.length === 0 && (
+            <div className="flex items-center justify-center h-full text-white/60">
+              No data available
+            </div>
+          )}
+          {!loading && !error && data.length > 0 && (
+            <ResponsiveContainer>
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(181, 108, 255, 0.25)" />
+                <XAxis dataKey="d" stroke="rgba(181, 108, 255, 0.85)" />
+                <YAxis domain={["auto", "auto"]} stroke="rgba(181, 108, 255, 0.85)" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#0b0614",
+                    borderColor: "#b56cff",
+                    color: "#f2e9ff",
+                  }}
+                  labelStyle={{ color: "#d6c4ff" }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="equity"
+                  dot={false}
+                  stroke="#b56cff"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
     </section>
