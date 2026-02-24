@@ -17,6 +17,9 @@ export default function MedicusPage() {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [startMonth, setStartMonth] = useState("01");
+  const [startDay, setStartDay] = useState("01");
+  const [startYear, setStartYear] = useState("2026");
 
   useEffect(() => {
     if (videoRef.current) videoRef.current.playbackRate = 0.5;
@@ -27,10 +30,10 @@ export default function MedicusPage() {
       try {
         setLoading(true);
         const today = new Date().toISOString().slice(0, 10);
-        const start = "2026-01-01";
+        const startDate = `${startYear}-${startMonth}-${startDay}`;
 
         const response = await fetch(
-          `/api/bots/medicus/equity?start=${start}&end=${today}`
+          `/api/bots/medicus/equity?start=${startDate}&end=${today}`
         );
 
         if (!response.ok) {
@@ -65,6 +68,7 @@ export default function MedicusPage() {
               d: new Date(item.d).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
+                year: "numeric",
               }),
               dailyReturn,
             };
@@ -85,7 +89,7 @@ export default function MedicusPage() {
     };
 
     fetchData();
-  }, []);
+  }, [startMonth, startDay, startYear]);
 
   return (
     <>
@@ -190,6 +194,59 @@ export default function MedicusPage() {
     <section suppressHydrationWarning className="py-20">
       <div className="mx-auto max-w-[1170px] px-4 sm:px-8 xl:px-0">
         <h2 className="text-3xl font-bold text-white mb-8">Performance</h2>
+        <div className="mb-6 flex gap-4">
+          <div>
+            <label className="block text-sm font-medium text-white/70 mb-2">
+              Month
+            </label>
+            <select
+              value={startMonth}
+              onChange={(e) => setStartMonth(e.target.value)}
+              className="px-4 py-2 bg-transparent text-[#f5c77a] border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              {Array.from({ length: 12 }, (_, i) => {
+                const month = String(i + 1).padStart(2, "0");
+                return (
+                  <option key={month} value={month} className="bg-gray-900 text-[#f5c77a]">
+                    {new Date(2026, i).toLocaleString("en-US", { month: "long" })}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-white/70 mb-2">
+              Day
+            </label>
+            <select
+              value={startDay}
+              onChange={(e) => setStartDay(e.target.value)}
+              className="px-4 py-2 bg-transparent text-[#f5c77a] border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              {Array.from({ length: 31 }, (_, i) => {
+                const day = String(i + 1).padStart(2, "0");
+                return (
+                  <option key={day} value={day} className="bg-gray-900 text-[#f5c77a]">
+                    {day}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-white/70 mb-2">
+              Year
+            </label>
+            <select
+              value={startYear}
+              onChange={(e) => setStartYear(e.target.value)}
+              className="px-4 py-2 bg-transparent text-[#f5c77a] border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="2025" className="bg-gray-900 text-[#f5c77a]">2025</option>
+              <option value="2026" className="bg-gray-900 text-[#f5c77a]">2026</option>
+            </select>
+          </div>
+        </div>
         <div className="w-full h-[400px] bg-black rounded-xl p-6 border border-white/10">
           {loading && (
             <div className="flex items-center justify-center h-full text-white/60">

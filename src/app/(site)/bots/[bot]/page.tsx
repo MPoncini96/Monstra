@@ -16,16 +16,19 @@ export default function BotPage({ params }: { params: { bot: string } }) {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [startMonth, setStartMonth] = useState("01");
+  const [startDay, setStartDay] = useState("01");
+  const [startYear, setStartYear] = useState("2026");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const today = new Date().toISOString().slice(0, 10);
-        const start = "2026-01-01";
+        const startDate = `${startYear}-${startMonth}-${startDay}`;
 
         const response = await fetch(
-          `/api/bots/${params.bot}/equity?start=${start}&end=${today}`
+          `/api/bots/${params.bot}/equity?start=${startDate}&end=${today}`
         );
 
         if (!response.ok) {
@@ -65,6 +68,7 @@ export default function BotPage({ params }: { params: { bot: string } }) {
               date: new Date(item.d).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
+                year: "numeric",
               }),
               dailyReturn,
             };
@@ -85,7 +89,7 @@ export default function BotPage({ params }: { params: { bot: string } }) {
     };
 
     fetchData();
-  }, [params.bot]);
+  }, [params.bot, startMonth, startDay, startYear]);
 
   if (loading) {
     return (
@@ -114,6 +118,61 @@ export default function BotPage({ params }: { params: { bot: string } }) {
   return (
     <div className="p-10 space-y-8">
       <h1 className="text-3xl font-bold capitalize">{params.bot} Performance</h1>
+
+      {/* Date Range Filter */}
+      <div className="bg-white rounded-xl p-6 shadow-md flex gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Month
+          </label>
+          <select
+            value={startMonth}
+            onChange={(e) => setStartMonth(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg text-[#f5c77a] bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {Array.from({ length: 12 }, (_, i) => {
+              const month = String(i + 1).padStart(2, "0");
+              return (
+                <option key={month} value={month} className="bg-gray-800 text-[#f5c77a]">
+                  {new Date(2026, i).toLocaleString("en-US", { month: "long" })}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Day
+          </label>
+          <select
+            value={startDay}
+            onChange={(e) => setStartDay(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg text-[#f5c77a] bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {Array.from({ length: 31 }, (_, i) => {
+              const day = String(i + 1).padStart(2, "0");
+              return (
+                <option key={day} value={day} className="bg-gray-800 text-[#f5c77a]">
+                  {day}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Year
+          </label>
+          <select
+            value={startYear}
+            onChange={(e) => setStartYear(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg text-[#f5c77a] bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="2025" className="bg-gray-800 text-[#f5c77a]">2025</option>
+            <option value="2026" className="bg-gray-800 text-[#f5c77a]">2026</option>
+          </select>
+        </div>
+      </div>
 
       {/* Equity Chart */}
       <div className="bg-white rounded-xl p-6 shadow-md">
