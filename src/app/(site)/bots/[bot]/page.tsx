@@ -12,6 +12,43 @@ import {
   Legend,
 } from "recharts";
 
+const CustomTooltip = ({ active, payload, initialEquity }: any) => {
+  if (active && payload && payload.length && initialEquity) {
+    const currentEquity = payload[0].value;
+    const date = payload[0].payload.date;
+    const returnPct = ((currentEquity - initialEquity) / initialEquity) * 100;
+    const sign = returnPct >= 0 ? "+" : "";
+    const color = returnPct >= 0 ? "#22c55e" : "#ef4444";
+
+    return (
+      <div
+        style={{
+          backgroundColor: "#ffffff",
+          border: "1px solid #3b82f6",
+          padding: "10px",
+          borderRadius: "4px",
+        }}
+      >
+        <p
+          style={{
+            color: "#6b7280",
+            margin: 0,
+            marginBottom: "4px",
+            fontSize: "12px",
+          }}
+        >
+          {date}
+        </p>
+        <p style={{ color, margin: 0, fontWeight: "bold" }}>
+          {sign}
+          {returnPct.toFixed(4)}%
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function BotPage({ params }: { params: { bot: string } }) {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +56,23 @@ export default function BotPage({ params }: { params: { bot: string } }) {
   const [startMonth, setStartMonth] = useState("01");
   const [startDay, setStartDay] = useState("01");
   const [startYear, setStartYear] = useState("2026");
+  const [initialEquity, setInitialEquity] = useState<number | null>(null);
+
+  const setDateRange = (days: number | "ytd") => {
+    const today = new Date();
+    let startDate: Date;
+
+    if (days === "ytd") {
+      startDate = new Date(today.getFullYear(), 0, 1);
+    } else {
+      startDate = new Date(today);
+      startDate.setDate(today.getDate() - days);
+    }
+
+    setStartYear(String(startDate.getFullYear()));
+    setStartMonth(String(startDate.getMonth() + 1).padStart(2, "0"));
+    setStartDay(String(startDate.getDate()).padStart(2, "0"));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,6 +130,7 @@ export default function BotPage({ params }: { params: { bot: string } }) {
         );
 
         setData(transformedData);
+        setInitialEquity(transformedData.length > 0 ? equityData[0].equity : null);
         setError(null);
       } catch (err) {
         const errorMessage =
@@ -174,6 +229,39 @@ export default function BotPage({ params }: { params: { bot: string } }) {
         </div>
       </div>
 
+      <div className="flex gap-2">
+        <button
+          onClick={() => setDateRange(5)}
+          className="px-4 py-2 bg-transparent text-[#f5c77a] border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          5D
+        </button>
+        <button
+          onClick={() => setDateRange(30)}
+          className="px-4 py-2 bg-transparent text-[#f5c77a] border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          1M
+        </button>
+        <button
+          onClick={() => setDateRange(90)}
+          className="px-4 py-2 bg-transparent text-[#f5c77a] border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          3M
+        </button>
+        <button
+          onClick={() => setDateRange(365)}
+          className="px-4 py-2 bg-transparent text-[#f5c77a] border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          1Y
+        </button>
+        <button
+          onClick={() => setDateRange("ytd")}
+          className="px-4 py-2 bg-transparent text-[#f5c77a] border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          YTD
+        </button>
+      </div>
+
       {/* Equity Chart */}
       <div className="bg-white rounded-xl p-6 shadow-md">
         <h2 className="text-xl font-semibold mb-4">Equity Curve</h2>
@@ -183,14 +271,7 @@ export default function BotPage({ params }: { params: { bot: string } }) {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis />
-              <Tooltip
-                formatter={(value) => {
-                  if (typeof value === "number") {
-                    return value.toFixed(4);
-                  }
-                  return value;
-                }}
-              />
+              <Tooltip content={<CustomTooltip initialEquity={initialEquity} />} />
               <Legend />
               <Line
                 type="monotone"
