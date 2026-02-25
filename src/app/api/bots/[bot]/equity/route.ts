@@ -52,7 +52,7 @@ export async function GET(
 
     // Query 2: Get all data normalized by starting equity
     const res = await client.query(
-      "SELECT d, equity / $3 AS equity FROM bot_equity WHERE bot_id = $1 AND d BETWEEN $2 AND $4 ORDER BY d",
+      "SELECT d, equity / $3 AS equity, holdings FROM bot_equity WHERE bot_id = $1 AND d BETWEEN $2 AND $4 ORDER BY d",
       [bot, start, e0, end]
     );
 

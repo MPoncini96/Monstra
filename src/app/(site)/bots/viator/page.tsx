@@ -49,15 +49,53 @@ const CustomTooltip = ({ active, payload, initialEquity }: any) => {
   return null;
 };
 
+const formatHoldings = (holdings: Record<string, number> | string | null | undefined) => {
+  if (!holdings) return "—";
+  let parsed: Record<string, number>;
+
+  if (typeof holdings === "string") {
+    try {
+      parsed = JSON.parse(holdings) as Record<string, number>;
+    } catch {
+      return "—";
+    }
+  } else {
+    parsed = holdings;
+  }
+
+  const entries = Object.entries(parsed)
+    .filter(([key, value]) => key !== "_meta" && typeof value === "number")
+    .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+
+  if (entries.length === 0) return "—";
+  return entries
+    .map(([ticker, weight]) => `${ticker} ${(weight * 100).toFixed(2)}%`)
+    .join(", ");
+};
+
 export default function ViatorPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [startMonth, setStartMonth] = useState("01");
-  const [startDay, setStartDay] = useState("01");
-  const [startYear, setStartYear] = useState("2026");
+  
+  // Set default to 30 days ago
+  const getDefaultDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() - 30);
+    return {
+      month: String(date.getMonth() + 1).padStart(2, "0"),
+      day: String(date.getDate()).padStart(2, "0"),
+      year: String(date.getFullYear())
+    };
+  };
+  
+  const defaultDate = getDefaultDate();
+  const [startMonth, setStartMonth] = useState(defaultDate.month);
+  const [startDay, setStartDay] = useState(defaultDate.day);
+  const [startYear, setStartYear] = useState(defaultDate.year);
   const [initialEquity, setInitialEquity] = useState<number | null>(null);
+  const [logRowCount, setLogRowCount] = useState<number>(25);
 
   useEffect(() => {
     if (videoRef.current) videoRef.current.playbackRate = 0.5;
@@ -105,7 +143,7 @@ export default function ViatorPage() {
 
         // Transform data to ensure proper format for Recharts
         const transformedData = equityData.map(
-          (item: { d: string; equity: number }, index: number) => {
+          (item: { d: string; equity: number; holdings?: Record<string, number> | null }, index: number) => {
             const dailyReturn =
               index > 0
                 ? parseFloat(
@@ -119,6 +157,7 @@ export default function ViatorPage() {
 
             return {
               ...item,
+              originalDate: item.d,
               d: new Date(item.d).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -145,6 +184,15 @@ export default function ViatorPage() {
 
     fetchData();
   }, [startMonth, startDay, startYear]);
+
+  let logRows = [...data];
+
+  // Always sort newest first and take first 25
+  logRows = logRows
+    .sort(
+      (a, b) => (b.originalDate ?? "").localeCompare(a.originalDate ?? "")
+    )
+    .slice(0, 25);
 
   return (
     <>
@@ -368,6 +416,37 @@ export default function ViatorPage() {
               </LineChart>
             </ResponsiveContainer>
           )}
+        </div>
+
+        <div className="mt-10 bg-black rounded-xl p-6 border border-white/10">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold text-white">Holdings Log</h2>
+          </div>
+          <div className="max-h-[360px] overflow-auto">
+            <table className="w-full text-left text-sm text-white/80">
+              <thead className="text-xs uppercase text-white/60">
+                <tr className="border-b border-white/10">
+                  <th className="py-3 pr-4 font-medium">Date</th>
+                  <th className="py-3 font-medium">Holdings</th>
+                </tr>
+              </thead>
+              <tbody>
+                {logRows.length === 0 && (
+                  <tr>
+                    <td colSpan={2} className="py-4 text-white/60">
+                      No holdings available
+                    </td>
+                  </tr>
+                )}
+                {logRows.map((row) => (
+                  <tr key={row.originalDate} className="border-b border-white/10">
+                    <td className="py-3 pr-4 align-top text-white/70">{row.d}</td>
+                    <td className="py-3 text-white/90">{formatHoldings(row.holdings)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
