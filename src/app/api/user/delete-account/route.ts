@@ -11,20 +11,35 @@ export async function DELETE() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Delete from Prisma database
-    await prisma.user.delete({
-      where: { clerkUserId: userId },
-    });
+    // Delete from Clerk first, then from database
+    // This way if Clerk deletion fails, we don't lose the database record
+    try {
+      const client = clerkClient();
+      await client.users.deleteUser(userId);
+      console.log(`Successfully deleted user from Clerk: ${userId}`);
+    } catch (clerkError) {
+      console.error("Clerk deletion error:", clerkError);
+      throw new Error(`Failed to delete from Clerk: ${clerkError}`);
+    }
 
-    // Delete from Clerk
-    await clerkClient().users.deleteUser(userId);
+    // Delete from Prisma database
+    try {
+      await prisma.user.delete({
+        where: { clerkUserId: userId },
+      });
+      console.log(`Successfully deleted user from database: ${userId}`);
+    } catch (prismaError) {
+      console.error("Prisma deletion error:", prismaError);
+      throw new Error(`Failed to delete from database: ${prismaError}`);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting account:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: `Failed to delete account: ${error}` },
       { status: 500 }
     );
   }
 }
+

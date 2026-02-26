@@ -13,7 +13,6 @@ const Header = () => {
   const [stickyMenu, setStickyMenu] = useState(false);
   const [monstraBytes, setMonstraBytes] = useState<number | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const { user } = useUser();
   const { signOut } = useClerk();
@@ -46,27 +45,6 @@ const Header = () => {
       fetchMonstraBytes();
     }
   }, [user]);
-
-  const handleDeleteAccount = async () => {
-    if (!confirm("Are you sure you want to delete your account? This cannot be undone.")) {
-      return;
-    }
-
-    setIsDeleting(true);
-    try {
-      const res = await fetch("/api/user/delete-account", { method: "DELETE" });
-      if (res.ok) {
-        await signOut({ redirectUrl: "/" });
-      } else {
-        alert("Failed to delete account");
-      }
-    } catch (error) {
-      console.error("Error deleting account:", error);
-      alert("Error deleting account");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   useEffect(() => {
     window.addEventListener("scroll", handleStickyMenu);
@@ -166,25 +144,6 @@ const Header = () => {
                       >
                         {menuItem.title}
                       </Link>
-                  <div className="relative">
-                    <button
-                      onClick={() => setSettingsOpen(!settingsOpen)}
-                      className="text-sm text-white hover:text-opacity-75"
-                    >
-                      ⚙️
-                    </button>
-                    {settingsOpen && (
-                      <div className="absolute right-0 mt-2 w-48 rounded-lg bg-dark/95 shadow-lg border border-white/10 z-1001">
-                        <button
-                          onClick={handleDeleteAccount}
-                          disabled={isDeleting}
-                          className="w-full px-4 py-2 text-left text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg disabled:opacity-50"
-                        >
-                          {isDeleting ? "Deleting..." : "Delete Account"}
-                        </button>
-                      </div>
-                    )}
-                  </div>
                     )}
                   </li>
                 ))}
@@ -200,17 +159,36 @@ const Header = () => {
                       <span className="text-xs text-white/80">MB</span>
                     </div>
                   )}
-                  <button
-                    onClick={() => signOut()}
-                    className="text-sm text-white hover:text-opacity-75"
-                  >
-                    Log Out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/sign-in"
+                  <div className="relative">
+                    <button
+                      onClick={() => setSettingsOpen(!settingsOpen)}
+                      className="text-sm text-white hover:text-opacity-75"
+                    >
+                      Profile
+                    </button>
+                    {settingsOpen && (
+                      <div className="absolute right-0 mt-2 w-48 rounded-lg bg-dark/95 shadow-lg border border-white/10 z-1001">
+                        <button
+                          onClick={handleDeleteAccount}
+                          disabled={isDeleting}
+                          className="w-full px-4 py-2 text-left text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg disabled:opacity-50 border-b border-white/10"
+                        >
+                          {isDeleting ? "Deleting..." : "Delete Account"}
+                        </button>
+                        <button
+                          onClick={() => signOut()}
+                          className="w-full px-4 py-2 text-left text-sm text-white hover:text-opacity-75 hover:bg-white/5 rounded-lg"
+                        >
+                          Log Out
+                        </button>
+                      </div>
+                          <Link
+                            href="/confirm-delete-account"
+                            onClick={() => setSettingsOpen(false)}
+                            className="w-full block px-4 py-2 text-left text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg border-b border-white/10"
+                          >
+                            Delete Account
+                          </Link>
                     className="text-sm text-white hover:text-opacity-75"
                   >
                     Sign In
