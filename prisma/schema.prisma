@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["app_state"]
+  schemas  = ["app", "trading"]
 }
 
 model User {
@@ -20,7 +20,7 @@ model User {
   botAccess   UserBotAccess[]
   stripe      StripeCustomer?
 
-  @@schema("app_state")
+  @@schema("app")
 }
 
 model UserProfile {
@@ -31,9 +31,8 @@ model UserProfile {
   avatarUrl   String?
   bio         String?
 
-  @@schema("app_state")
+  @@schema("app")
 }
-
 model Bot {
   id          String   @id
   name        String
@@ -43,9 +42,8 @@ model Bot {
 
   access      UserBotAccess[]
 
-  @@schema("app_state")
+  @@schema("app")
 }
-
 model UserBotAccess {
   id        String   @id @default(cuid())
   userId    String
@@ -61,7 +59,7 @@ model UserBotAccess {
 
   @@unique([userId, botId, source])
   @@index([botId])
-  @@schema("app_state")
+  @@schema("app")
 }
 
 enum AccessSource {
@@ -70,7 +68,7 @@ enum AccessSource {
   BOT_SUBSCRIPTION
   GRANT
 
-  @@schema("app_state")
+  @@schema("app")
 }
 
 enum AccessStatus {
@@ -79,7 +77,7 @@ enum AccessStatus {
   CANCELED
   EXPIRED
 
-  @@schema("app_state")
+  @@schema("app")
 }
 
 model StripeCustomer {
@@ -89,10 +87,8 @@ model StripeCustomer {
   createdAt         DateTime @default(now())
 
   subscriptions     StripeSubscription[]
-
-  @@schema("app_state")
+  @@schema("app")
 }
-
 model StripeSubscription {
   id                   String   @id @default(cuid())
   stripeSubscriptionId String   @unique
@@ -107,5 +103,5 @@ model StripeSubscription {
   customer             StripeCustomer @relation(fields: [customerUserId], references: [userId], onDelete: Cascade)
 
   @@index([customerUserId])
-  @@schema("app_state")
+  @@schema("app")
 }

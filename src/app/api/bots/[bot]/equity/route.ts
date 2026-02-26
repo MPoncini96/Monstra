@@ -95,9 +95,9 @@ export async function GET(
     console.log("Database connection successful");
     
     // Query 1: Get the starting equity value
-    console.log(`Querying bot_equity for bot=${bot}, start=${effectiveStart}`);
+    console.log(`Querying trading.bot_equity for bot=${bot}, start=${effectiveStart}`);
     const startRes = await client.query(
-      "SELECT equity FROM public.bot_equity WHERE bot_id = $1 AND d >= $2 ORDER BY d LIMIT 1",
+      "SELECT equity FROM trading.bot_equity WHERE bot_id = $1 AND d >= $2 ORDER BY d LIMIT 1",
       [bot, effectiveStart]
     );
 
@@ -115,7 +115,7 @@ export async function GET(
     // Query 2: Get all data normalized by starting equity
     console.log(`Querying equity range for bot=${bot}, start=${effectiveStart}, end=${effectiveEnd}`);
     const res = await client.query(
-      "SELECT d, equity / $3 AS equity, holdings FROM public.bot_equity WHERE bot_id = $1 AND d BETWEEN $2 AND $4 ORDER BY d",
+      "SELECT d, equity / $3 AS equity, holdings FROM trading.bot_equity WHERE bot_id = $1 AND d BETWEEN $2 AND $4 ORDER BY d",
       [bot, effectiveStart, e0, effectiveEnd]
     );
 

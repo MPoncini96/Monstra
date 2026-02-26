@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { clerkClient } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/clerk-sdk-node";
 import prisma from "@/libs/prismaDB";
 import { NextResponse } from "next/server";
 
@@ -14,8 +14,7 @@ export async function DELETE() {
     // Delete from Clerk first, then from database
     // This way if Clerk deletion fails, we don't lose the database record
     try {
-      const client = clerkClient();
-      await client.users.deleteUser(userId);
+      await clerkClient.users.deleteUser(userId);
       console.log(`Successfully deleted user from Clerk: ${userId}`);
     } catch (clerkError) {
       console.error("Clerk deletion error:", clerkError);

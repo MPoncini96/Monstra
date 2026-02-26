@@ -168,13 +168,13 @@ const Header = () => {
                     </button>
                     {settingsOpen && (
                       <div className="absolute right-0 mt-2 w-48 rounded-lg bg-dark/95 shadow-lg border border-white/10 z-1001">
-                        <button
-                          onClick={handleDeleteAccount}
-                          disabled={isDeleting}
-                          className="w-full px-4 py-2 text-left text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg disabled:opacity-50 border-b border-white/10"
+                        <Link
+                          href="/confirm-delete-account"
+                          onClick={() => setSettingsOpen(false)}
+                          className="w-full block px-4 py-2 text-left text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg border-b border-white/10"
                         >
-                          {isDeleting ? "Deleting..." : "Delete Account"}
-                        </button>
+                          Delete Account
+                        </Link>
                         <button
                           onClick={() => signOut()}
                           className="w-full px-4 py-2 text-left text-sm text-white hover:text-opacity-75 hover:bg-white/5 rounded-lg"
@@ -182,13 +182,13 @@ const Header = () => {
                           Log Out
                         </button>
                       </div>
-                          <Link
-                            href="/confirm-delete-account"
-                            onClick={() => setSettingsOpen(false)}
-                            className="w-full block px-4 py-2 text-left text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg border-b border-white/10"
-                          >
-                            Delete Account
-                          </Link>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/sign-in"
                     className="text-sm text-white hover:text-opacity-75"
                   >
                     Sign In
