@@ -51,6 +51,7 @@ export async function POST(req: Request) {
       create: {
         clerkUserId,
         email,
+        monstraBytes: 1000,
         profile: {
           create: { displayName },
         },

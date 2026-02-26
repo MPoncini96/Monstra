@@ -11,6 +11,7 @@ import menuData from "./menuData";
 const Header = () => {
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
+  const [monstraBytes, setMonstraBytes] = useState<number | null>(null);
 
   const { user } = useUser();
   const { signOut } = useClerk();
@@ -25,6 +26,24 @@ const Header = () => {
       setStickyMenu(false);
     }
   };
+
+  // Fetch user's monstra bytes
+  useEffect(() => {
+    if (user) {
+      const fetchMonstraBytes = async () => {
+        try {
+          const res = await fetch("/api/user/monstra-bytes");
+          if (res.ok) {
+            const data = await res.json();
+            setMonstraBytes(data.monstraBytes);
+          }
+        } catch (error) {
+          console.error("Failed to fetch monstra bytes:", error);
+        }
+      };
+      fetchMonstraBytes();
+    }
+  }, [user]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleStickyMenu);
@@ -132,12 +151,20 @@ const Header = () => {
 
             <div className="mt-7 flex items-center gap-6 lg:mt-0">
               {user ? (
-                <button
-                  onClick={() => signOut()}
-                  className="text-sm text-white hover:text-opacity-75"
-                >
-                  Log Out
-                </button>
+                <>
+                  {monstraBytes !== null && (
+                    <div className="flex items-center gap-2 text-sm text-white">
+                      <span className="font-semibold">{monstraBytes}</span>
+                      <span className="text-xs text-white/80">MB</span>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => signOut()}
+                    className="text-sm text-white hover:text-opacity-75"
+                  >
+                    Log Out
+                  </button>
+                </>
               ) : (
                 <>
                   <Link
