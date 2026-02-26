@@ -1,6 +1,110 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
-  // Prisma has been removed from this project.
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["app_state"]
+}
+
+model User {
+  id          String   @id @default(cuid())
+  clerkUserId String   @unique
+  email       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  profile     UserProfile?
+  botAccess   UserBotAccess[]
+  stripe      StripeCustomer?
+
+  @@schema("app_state")
+}
+
+model UserProfile {
+  userId      String  @id
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  displayName String?
+  avatarUrl   String?
+  bio         String?
+
+  @@schema("app_state")
+}
+
+model Bot {
+  id          String   @id
+  name        String
+  description String?
+  isOfficial  Boolean  @default(false)
+  isPublic    Boolean  @default(true)
+
+  access      UserBotAccess[]
+
+  @@schema("app_state")
+}
+
+model UserBotAccess {
+  id        String   @id @default(cuid())
+  userId    String
+  botId     String
+
+  source    AccessSource
+  status    AccessStatus @default(ACTIVE)
+  startsAt  DateTime @default(now())
+  endsAt    DateTime?
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bot       Bot  @relation(fields: [botId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, botId, source])
+  @@index([botId])
+  @@schema("app_state")
+}
+
+enum AccessSource {
+  FREE
+  PREMIUM
+  BOT_SUBSCRIPTION
+  GRANT
+
+  @@schema("app_state")
+}
+
+enum AccessStatus {
+  ACTIVE
+  PAUSED
+  CANCELED
+  EXPIRED
+
+  @@schema("app_state")
+}
+
+model StripeCustomer {
+  userId            String  @id
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeCustomerId  String  @unique
+  createdAt         DateTime @default(now())
+
+  subscriptions     StripeSubscription[]
+
+  @@schema("app_state")
+}
+
+model StripeSubscription {
+  id                   String   @id @default(cuid())
+  stripeSubscriptionId String   @unique
+  customerUserId       String
+
+  status               String
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean  @default(false)
+
+  planKey              String?
+
+  customer             StripeCustomer @relation(fields: [customerUserId], references: [userId], onDelete: Cascade)
+
+  @@index([customerUserId])
+  @@schema("app_state")
 }
