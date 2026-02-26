@@ -35,15 +35,25 @@ const Header = () => {
       <header
         className={`fixed left-0 top-0 z-1000 w-full ${
           stickyMenu
-            ? "before:features-row-border bg-dark/70 py-4! shadow-sm backdrop-blur-lg transition duration-100 before:absolute before:bottom-0 before:left-0 before:h-[1px] before:w-full lg:py-0!"
-            : "py-7 lg:py-0"
+            ? "before:features-row-border bg-dark/70 py-8! shadow-sm backdrop-blur-lg transition duration-100 before:absolute before:bottom-0 before:left-0 before:h-[1px] before:w-full lg:py-2!"
+            : "py-12 lg:py-3"
         }`}
       >
         <div className="relative mx-auto max-w-[1170px] items-center justify-between px-4 sm:px-8 lg:flex xl:px-0">
           <div className="flex w-full items-center justify-between lg:w-auto">
-            <Link href="/">
-              <Image src={logo} alt="Logo" width={164} height={36} />
-            </Link>
+            <div className="flex flex-col gap-2 pt-4 pb-4 lg:pt-0 lg:pb-0">
+              <Link href="/" className="pt-4">
+                <Image src={logo} alt="Logo" width={164} height={36} />
+              </Link>
+              {user && (
+                <Link
+                  href="/premium"
+                  className="button-border-gradient hover:button-gradient-hover relative flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs text-white shadow-button hover:shadow-none"
+                >
+                  Join Monstra Premium
+                </Link>
+              )}
+            </div>
 
             <button
               onClick={() => setNavigationOpen(!navigationOpen)}
