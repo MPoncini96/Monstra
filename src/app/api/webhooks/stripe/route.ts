@@ -173,57 +173,109 @@ export async function POST(req: Request) {
   const isActive = ACTIVE_STATUSES.has(subscription.status);
   const endsAt = isActive ? null : new Date();
 
-  await prisma.$transaction(async (tx) => {
+interface TransactionClient {
+    stripeCustomer: {
+        upsert(args: {
+            where: { stripeCustomerId: string };
+            update: { userId: string };
+            create: { stripeCustomerId: string; userId: string };
+        }): Promise<any>;
+    };
+    stripeSubscription: {
+        upsert(args: {
+            where: { stripeSubscriptionId: string };
+            update: {
+                status: string;
+                currentPeriodEnd: Date | null;
+                cancelAtPeriodEnd: boolean;
+                planKey: string | null;
+                customerUserId: string;
+            };
+            create: {
+                stripeSubscriptionId: string;
+                status: string;
+                currentPeriodEnd: Date | null;
+                cancelAtPeriodEnd: boolean;
+                planKey: string | null;
+                customerUserId: string;
+            };
+        }): Promise<any>;
+    };
+    userBotAccess: {
+        upsert(args: {
+            where: {
+                userId_botId_source: {
+                    userId: string;
+                    botId: string;
+                    source: "PREMIUM" | "BOT_SUBSCRIPTION";
+                };
+            };
+            update: {
+                status: "ACTIVE" | "CANCELED";
+                endsAt: Date | null;
+            };
+            create: {
+                userId: string;
+                botId: string;
+                source: "PREMIUM" | "BOT_SUBSCRIPTION";
+                status: "ACTIVE" | "CANCELED";
+                endsAt: Date | null;
+            };
+        }): Promise<any>;
+    };
+}
+
+await prisma.$transaction(async (tx: TransactionClient) => {
     await tx.stripeCustomer.upsert({
-      where: { stripeCustomerId },
-      update: { userId },
-      create: { stripeCustomerId, userId },
+        where: { stripeCustomerId },
+        update: { userId },
+        create: { stripeCustomerId, userId },
     });
 
     await tx.stripeSubscription.upsert({
-      where: { stripeSubscriptionId },
-      update: {
-        status: subscription.status,
-        currentPeriodEnd: unixToDate(subscription.current_period_end),
-        cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
-        planKey: planKeys[0] ?? null,
-        customerUserId: userId,
-      },
-      create: {
-        stripeSubscriptionId,
-        status: subscription.status,
-        currentPeriodEnd: unixToDate(subscription.current_period_end),
-        cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
-        planKey: planKeys[0] ?? null,
-        customerUserId: userId,
-      },
+        where: { stripeSubscriptionId },
+        update: {
+            status: subscription.status,
+            currentPeriodEnd: unixToDate(subscription.current_period_end),
+            cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
+            planKey: planKeys[0] ?? null,
+            customerUserId: userId,
+        },
+        create: {
+            stripeSubscriptionId,
+            status: subscription.status,
+            currentPeriodEnd: unixToDate(subscription.current_period_end),
+            cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
+            planKey: planKeys[0] ?? null,
+            customerUserId: userId,
+        },
     });
 
     for (const entitlement of entitlements) {
-      await ensureBot(entitlement.botId);
+        await ensureBot(entitlement.botId);
 
-      await tx.userBotAccess.upsert({
-        where: {
-          userId_botId_source: {
-            userId,
-            botId: entitlement.botId,
-            source: entitlement.source,
-          },
-        },
-        update: {
-          status: isActive ? "ACTIVE" : "CANCELED",
-          endsAt,
-        },
-        create: {
-          userId,
-          botId: entitlement.botId,
-          source: entitlement.source,
-          status: isActive ? "ACTIVE" : "CANCELED",
-          endsAt,
-        },
-      });
+        await tx.userBotAccess.upsert({
+            where: {
+                userId_botId_source: {
+                    userId,
+                    botId: entitlement.botId,
+                    source: entitlement.source,
+                },
+            },
+            update: {
+                status: isActive ? "ACTIVE" : "CANCELED",
+                endsAt,
+            },
+            create: {
+                userId,
+                botId: entitlement.botId,
+                source: entitlement.source,
+                status: isActive ? "ACTIVE" : "CANCELED",
+                endsAt,
+            },
+        });
     }
-  });
+});
 
   return NextResponse.json({ ok: true });
 }

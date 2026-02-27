@@ -1,12 +1,143 @@
+.cl-footerActionText,
+.cl-footerActionLink {
+  display: none !important;
+}
+.cl-userButtonPopoverActionButtonIcon {
+  display: none !important;
+}
+/* Hide all avatar/profile images in Clerk UserButton popover */
+.cl-userButtonPopoverCard img,
+.cl-userButtonPopoverCard .cl-userPreviewAvatar,
+.cl-userButtonPopoverCard .cl-avatarBox,
+.cl-userButtonPopoverCard .cl-internal-1r9ov1v,
+.cl-userButtonPopoverCard .cl-internal-1r9ov1v *,
+.cl-userButtonPopoverCard .cl-internal-1r9ov1v img,
+.cl-userButtonPopoverCard .cl-userButtonPopoverAvatar,
+.cl-userButtonPopoverCard .cl-userButtonPopoverAvatar * {
+  display: none !important;
+}
+/* Clerk UserButton Popover styled like Currencies dropdown */
+/* Clerk User Button Dropdown – Clean Version */
+
+/* Main popover background */
+.cl-userButtonPopoverCard {
+  background: #000000;
+  border: 1px solid #2e1065; /* dark purple */
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
+}
+
+/* Menu Items */
+/* Action buttons (Manage account / Sign out) */
+.cl-userButtonPopoverActionButton {
+  background: #111111; /* slightly lifted black */
+  border: 1px solid #2e1065; /* dark purple border */
+  border-radius: 8px;
+  transition: background 0.2s ease, border 0.2s ease;
+}
+
+.cl-userButtonPopoverActionButton:hover {
+  background: #4c1d95 !important;
+  border-color: #4c1d95 !important;
+  color: #fff !important;
+}
+
+/* Footer */
+/* Footer divider */
+.cl-userButtonPopoverFooter {
+  border-top: 1px solid #2e1065;
+}
+/* Development mode text */
+.cl-userButtonPopoverFooter span,
+.cl-userButtonPopoverFooter p {
+  color: #ffffff !important;
+}
+/* Remove legacy gradients and white color overrides for Clerk UserButton dropdown */
+/* Clerk UserButton Popover Customization */
+.cl-userButtonPopoverCard,
+.cl-internal-1fsg6zy,
+.cl-internal-1fsg6zy .cl-card,
+.cl-internal-1fsg6zy .cl-card *,
+.cl-userButtonPopover,
+.cl-userButtonPopover *,
+.cl-userButtonPopoverCard *,
+.cl-userButtonPopoverCard {
+  background: #000 !important;
+  color: #e6c981 !important;
+}
+.cl-internal-1fsg6zy .cl-card *, .cl-userButtonPopoverActionButton, .cl-userButtonPopoverActionButtonIcon, .cl-userButtonPopoverFooter, .cl-userButtonPopoverActionText, .cl-userButtonPopoverAction {
+  color: #e6c981 !important;
+}
+/* Hide Clerk 'last used' text on sign in */
+.cl-userPreviewSecondaryIdentifier, .cl-internal-1r5su4o {
+  display: none !important;
+}
+/* Clerk Sign Up Prompt/Footer Customization */
+.cl-footer, .cl-internal-1fsg6zy, .cl-internal-1fsg6zy .cl-footer, .cl-internal-1fsg6zy .cl-footerAction {
+  background: #0a1433 !important; /* dark blue */
+  color: #fff !important;
+  border-radius: 0 0 8px 8px !important;
+}
+.cl-footerActionText, .cl-footerActionLink, .cl-internal-1fsg6zy .cl-footerActionText, .cl-internal-1fsg6zy .cl-footerActionLink {
+  color: #eee8aa !important;
+}
+  .cl-footerActionText, .cl-footerActionLink, .cl-internal-1fsg6zy .cl-footerActionText, .cl-internal-1fsg6zy .cl-footerActionLink {
+    color: #b8860b !important;
+  }
+.cl-footer, .cl-footer * {
+  color: #fff !important;
+}
+.cl-internal-1fsg6zy .cl-footer {
+  background: #0a1433 !important;
+}
+/* Clerk Sign In Modal Customization */
+.cl-rootBox, .cl-card, .cl-internal-b3fm6y, .cl-internal-1fsg6zy { /* selectors may change, update as needed */
+  background: #191625 !important;
+  color: #fff !important;
+}
+.cl-headerTitle, .cl-headerSubtitle, .cl-internal-1fsg6zy, .cl-internal-1fsg6zy * {
+  color: #fff !important;
+}
+.cl-formFieldLabel, .cl-internal-1fsg6zy label {
+  color: #fff !important;
+}
+.cl-formFieldInput, .cl-internal-1fsg6zy input {
+  background: #100d20 !important;
+  color: #fff !important;
+  border: 1px solid #8646f4 !important;
+}
+.cl-footerActionText, .cl-footerActionLink {
+  color: #bfa100 !important;
+}
+.cl-footerActionText, .cl-footerActionLink {
+  color: #eee8aa !important;
+}
 /* Clerk Continue Button Customization */
 .cl-formButtonPrimary {
   background-color: #bfa100 !important; /* Darker Gold */
   color: #191625 !important;
   border: none !important;
 }
+.cl-formButtonPrimary {
+  background-color: #eee8aa !important; /* PaleGold */
+  color: #191625 !important;
+  border: none !important;
+}
+  .cl-formButtonPrimary {
+    background-color: #b8860b !important; /* DarkGoldenRod */
+    color: #191625 !important;
+    border: none !important;
+  }
 .cl-formButtonPrimary:hover {
   background-color: #8c7300 !important;
 }
+.cl-formButtonPrimary:hover {
+  background-color: #e6db8a !important;
+}
+  .cl-formButtonPrimary:hover {
+    background-color: #a97c13 !important;
+  }
 /* Clerk Social Button Customization */
 .cl-socialButtonsBlockButton {
   background-color: #8646f4 !important;

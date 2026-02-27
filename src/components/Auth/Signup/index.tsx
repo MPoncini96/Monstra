@@ -14,6 +14,7 @@ import z from "zod";
 
 const RegisterSchema = z.object({
   name: z.string(),
+  username: z.string().min(3, "Username must be at least 3 characters").max(20, "Username must be at most 20 characters").regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
   email: z.string().email("Please enter a valid email address."),
   password: z
     .string()
@@ -35,6 +36,7 @@ const RegisterSchema = z.object({
 const Signup = () => {
   const [data, setData] = useState({
     name: "",
+    username: "",
     email: "",
     password: "",
   });
@@ -43,7 +45,7 @@ const Signup = () => {
 
   const [isPassword, setIsPassword] = useState(false);
 
-  const { name, email, password } = data;
+  const { name, username, email, password } = data;
 
   const registerUser = async (e: any) => {
     e.preventDefault();
@@ -55,7 +57,7 @@ const Signup = () => {
 
     setLoader(true);
 
-    const result = RegisterSchema.safeParse({ name, email, password });
+    const result = RegisterSchema.safeParse({ name, username, email, password });
     if (!result.success) {
       toast.error(result.error.errors[0].message);
       setLoader(false);
@@ -65,6 +67,7 @@ const Signup = () => {
     axios
       .post("/api/register", {
         name,
+        username,
         email,
         password,
       })
@@ -72,6 +75,7 @@ const Signup = () => {
         toast.success("User has been registered");
         setData({
           name: "",
+          username: "",
           email: "",
           password: "",
         });
@@ -122,6 +126,20 @@ const Signup = () => {
                       <MagicLink />
                     ) : (
                       <form onSubmit={registerUser}>
+                        <div className="relative mb-4">
+                          <input
+                            type="text"
+                            placeholder="Create a username"
+                            value={data.username}
+                            onChange={(e) =>
+                              setData({
+                                ...data,
+                                username: e.target.value,
+                              })
+                            }
+                            className="w-full rounded-lg border border-white/[0.12] bg-transparent py-3.5 pr-4 font-medium text-white outline-hidden focus:border-purple focus-visible:shadow-none"
+                          />
+                        </div>
                         <div className="relative mb-4">
                           <span className="absolute left-6 top-1/2 -translate-y-1/2">
                             <svg

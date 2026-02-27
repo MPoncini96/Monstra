@@ -1,5 +1,5 @@
 "use client";
-import { useClerk, useUser } from "@clerk/nextjs";
+import { useUser, UserButton, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,7 +15,6 @@ const Header = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const { user } = useUser();
-  const { signOut } = useClerk();
 
   const pathUrl = usePathname();
 
@@ -151,69 +150,73 @@ const Header = () => {
             </nav>
 
             <div className="mt-7 flex items-center gap-6 lg:mt-0">
-              {user ? (
-                <>
-                  {monstraBytes !== null && (
-                    <div className="flex items-center gap-2 text-sm text-white">
-                      <span className="font-semibold">{monstraBytes}</span>
-                      <span className="text-xs text-white/80">MB</span>
+              <SignedIn>
+                <div className="relative group">
+                  <button
+                    className="button-border-gradient hover:button-gradient-hover flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-white shadow-button hover:shadow-none focus:outline-none"
+                    onClick={() => setSettingsOpen((open) => !open)}
+                    onBlur={() => setTimeout(() => setSettingsOpen(false), 150)}
+                  >
+                    Currencies
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {settingsOpen && (
+                    <div className="absolute right-0 mt-2 w-56 rounded-lg bg-dark/95 shadow-lg border border-white/10 z-1001 p-4">
+                      <div className="flex flex-col gap-2 text-sm text-white">
+                        <div className="flex items-center gap-2 justify-between">
+                          <span>MonstraBytes</span>
+                          <span className="font-semibold">3</span>
+                        </div>
+                        <div className="flex items-center gap-2 justify-between">
+                          <span>Nums</span>
+                          <span className="font-semibold">10</span>
+                        </div>
+                        <div className="flex items-center gap-2 justify-between">
+                          <span>Flamma</span>
+                          <span className="font-semibold">5</span>
+                        </div>
+                        <div className="flex items-center gap-2 justify-between">
+                          <span>Mutates</span>
+                          <span className="font-semibold">5</span>
+                        </div>
+                        <div className="flex items-center gap-2 justify-between">
+                          <span>Fortuna</span>
+                          <span className="font-semibold">1000</span>
+                        </div>
+                      </div>
                     </div>
                   )}
-                  <div className="relative">
-                    <button
-                      onClick={() => setSettingsOpen(!settingsOpen)}
-                      className="text-sm text-white hover:text-opacity-75"
-                    >
-                      Profile
-                    </button>
-                    {settingsOpen && (
-                      <div className="absolute right-0 mt-2 w-48 rounded-lg bg-dark/95 shadow-lg border border-white/10 z-1001">
-                        <Link
-                          href="/confirm-delete-account"
-                          onClick={() => setSettingsOpen(false)}
-                          className="w-full block px-4 py-2 text-left text-sm text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg border-b border-white/10"
-                        >
-                          Delete Account
-                        </Link>
-                        <button
-                          onClick={() => signOut()}
-                          className="w-full px-4 py-2 text-left text-sm text-white hover:text-opacity-75 hover:bg-white/5 rounded-lg"
-                        >
-                          Log Out
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/sign-in"
-                    className="text-sm text-white hover:text-opacity-75"
-                  >
+                </div>
+                <UserButton
+                  afterSignOutUrl="/"
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: "hidden", // Hide the avatar
+                      userButtonPopoverCard: "bg-[#18144a] border border-[#22204a] text-[#b8860b] rounded-lg shadow-lg",
+                      userButtonPopoverActionButton: "hover:bg-[#0a1433] text-[#b8860b]",
+                      userButtonPopoverActionButtonIcon: "text-[#b8860b]",
+                      userButtonPopoverFooter: "bg-[#0a1433] text-[#b8860b] rounded-b-lg",
+                      userButtonPopoverActionText: "text-[#b8860b]",
+                      userButtonPopoverAction: "text-[#b8860b]"
+                    }
+                  }}
+                />
+              </SignedIn>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <span className="button-border-gradient hover:button-gradient-hover relative flex items-center gap-1.5 rounded-lg px-4.5 py-2 text-sm text-white shadow-button hover:shadow-none cursor-pointer">
                     Sign In
-                  </Link>
-                  <Link
-                    href="/sign-up"
-                    className="button-border-gradient hover:button-gradient-hover relative flex items-center gap-1.5 rounded-lg px-4.5 py-2 text-sm text-white shadow-button hover:shadow-none"
-                  >
-                    Sign up
-                    <svg
-                      className="mt-0.5"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M14.4002 7.60002L9.2252 2.35002C9.0002 2.12502 8.6502 2.12502 8.4252 2.35002C8.2002 2.57502 8.2002 2.92502 8.4252 3.15002L12.6252 7.42502H2.0002C1.7002 7.42502 1.4502 7.67502 1.4502 7.97502C1.4502 8.27502 1.7002 8.55003 2.0002 8.55003H12.6752L8.4252 12.875C8.2002 13.1 8.2002 13.45 8.4252 13.675C8.5252 13.775 8.6752 13.825 8.8252 13.825C8.9752 13.825 9.1252 13.775 9.2252 13.65L14.4002 8.40002C14.6252 8.17502 14.6252 7.82503 14.4002 7.60002Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </Link>
-                </>
-              )}
+                  </span>
+                </SignInButton>
+                <Link
+                  href="/sign-up"
+                  className="button-border-gradient hover:button-gradient-hover relative flex items-center gap-1.5 rounded-lg px-4.5 py-2 text-sm text-white shadow-button hover:shadow-none"
+                >
+                  Sign up
+                </Link>
+              </SignedOut>
             </div>
           </div>
         </div>
