@@ -170,6 +170,10 @@ const Header = () => {
                           <span className="font-semibold">3</span>
                         </div>
                         <div className="flex items-center gap-2 justify-between">
+                          <span>AurumBytes</span>
+                          <span className="font-semibold">0</span>
+                        </div>
+                        <div className="flex items-center gap-2 justify-between">
                           <span>Nums</span>
                           <span className="font-semibold">10</span>
                         </div>
