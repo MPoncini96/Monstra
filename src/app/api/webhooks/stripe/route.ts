@@ -173,7 +173,7 @@ export async function POST(req: Request) {
   const isActive = ACTIVE_STATUSES.has(subscription.status);
   const endsAt = isActive ? null : new Date();
 
-  await prisma.$transaction(async (tx: typeof prisma) => {
+  await prisma.$transaction(async (tx) => {
     await tx.stripeCustomer.upsert({
       where: { stripeCustomerId },
       update: { userId },
