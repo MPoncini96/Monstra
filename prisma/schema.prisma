@@ -9,23 +9,23 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  clerkUserId String   @unique
-  email       String?
-  monstraBytes Int     @default(1000)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  clerkUserId  String   @unique
+  email        String?
+  monstraBytes Int      @default(1000)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  profile     UserProfile?
-  botAccess   UserBotAccess[]
-  stripe      StripeCustomer?
+  profile   UserProfile?
+  botAccess UserBotAccess[]
+  stripe    StripeCustomer?
 
   @@schema("app")
 }
 
 model UserProfile {
-  userId      String  @id
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   displayName String?
   avatarUrl   String?
@@ -33,29 +33,31 @@ model UserProfile {
 
   @@schema("app")
 }
+
 model Bot {
-  id          String   @id
+  id          String  @id
   name        String
   description String?
-  isOfficial  Boolean  @default(false)
-  isPublic    Boolean  @default(true)
+  isOfficial  Boolean @default(false)
+  isPublic    Boolean @default(true)
 
-  access      UserBotAccess[]
+  access UserBotAccess[]
 
   @@schema("app")
 }
+
 model UserBotAccess {
-  id        String   @id @default(cuid())
-  userId    String
-  botId     String
+  id     String @id @default(cuid())
+  userId String
+  botId  String
 
-  source    AccessSource
-  status    AccessStatus @default(ACTIVE)
-  startsAt  DateTime @default(now())
-  endsAt    DateTime?
+  source   AccessSource
+  status   AccessStatus @default(ACTIVE)
+  startsAt DateTime     @default(now())
+  endsAt   DateTime?
 
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bot       Bot  @relation(fields: [botId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bot  Bot  @relation(fields: [botId], references: [id], onDelete: Cascade)
 
   @@unique([userId, botId, source])
   @@index([botId])
@@ -81,26 +83,28 @@ enum AccessStatus {
 }
 
 model StripeCustomer {
-  userId            String  @id
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  stripeCustomerId  String  @unique
-  createdAt         DateTime @default(now())
+  userId           String   @id
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeCustomerId String   @unique
+  createdAt        DateTime @default(now())
 
-  subscriptions     StripeSubscription[]
+  subscriptions StripeSubscription[]
+
   @@schema("app")
 }
+
 model StripeSubscription {
-  id                   String   @id @default(cuid())
-  stripeSubscriptionId String   @unique
+  id                   String @id @default(cuid())
+  stripeSubscriptionId String @unique
   customerUserId       String
 
-  status               String
-  currentPeriodEnd     DateTime?
-  cancelAtPeriodEnd    Boolean  @default(false)
+  status            String
+  currentPeriodEnd  DateTime?
+  cancelAtPeriodEnd Boolean   @default(false)
 
-  planKey              String?
+  planKey String?
 
-  customer             StripeCustomer @relation(fields: [customerUserId], references: [userId], onDelete: Cascade)
+  customer StripeCustomer @relation(fields: [customerUserId], references: [userId], onDelete: Cascade)
 
   @@index([customerUserId])
   @@schema("app")

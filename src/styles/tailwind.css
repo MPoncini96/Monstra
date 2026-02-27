@@ -1,3 +1,21 @@
+/* Clerk Continue Button Customization */
+.cl-formButtonPrimary {
+  background-color: #bfa100 !important; /* Darker Gold */
+  color: #191625 !important;
+  border: none !important;
+}
+.cl-formButtonPrimary:hover {
+  background-color: #8c7300 !important;
+}
+/* Clerk Social Button Customization */
+.cl-socialButtonsBlockButton {
+  background-color: #8646f4 !important;
+  color: #fff !important;
+  border: none !important;
+}
+.cl-socialButtonsBlockButton:hover {
+  background-color: #6d28d9 !important;
+}
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 
