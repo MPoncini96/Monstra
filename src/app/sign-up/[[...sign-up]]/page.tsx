@@ -37,7 +37,10 @@ const appearance = {
 export default function Page() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <SignUp appearance={appearance} />
+      <SignUp
+        appearance={appearance}
+        afterSignUpUrl={process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL || "/create-username"}
+      />
     </div>
   );
 }
