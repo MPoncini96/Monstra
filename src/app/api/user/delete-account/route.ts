@@ -23,8 +23,8 @@ export async function DELETE() {
 
     // Delete from Prisma database
     try {
-      await prisma.user.delete({
-        where: { clerkUserId: userId },
+      await prisma.users.delete({
+        where: { id: userId },
       });
       console.log(`Successfully deleted user from database: ${userId}`);
     } catch (prismaError) {

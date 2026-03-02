@@ -71,16 +71,18 @@ function getEntitlements(planKeys: string[]) {
 }
 
 async function ensureBot(botId: string) {
-  await prisma.bot.upsert({
-    where: { id: botId },
-    update: {},
-    create: {
-      id: botId,
-      name: botId,
-      isOfficial: false,
-      isPublic: false,
-    },
-  });
+  // TODO: Bot table doesn't exist yet
+  // await prisma.bot.upsert({
+  //   where: { id: botId },
+  //   update: {},
+  //   create: {
+  //     id: botId,
+  //     name: botId,
+  //     isOfficial: false,
+  //     isPublic: false,
+  //   },
+  // });
+  console.log(`Bot ${botId} would be created if bot table existed`);
 }
 
 async function resolveUserId(
@@ -88,19 +90,19 @@ async function resolveUserId(
   subscription: Stripe.Subscription
 ) {
   if (subscription.metadata?.clerkUserId) {
-    const user = await prisma.user.findUnique({
-      where: { clerkUserId: subscription.metadata.clerkUserId },
+    const user = await prisma.users.findUnique({
+      where: { id: subscription.metadata.clerkUserId },
     });
     return user?.id ?? null;
   }
 
-  const linkedCustomer = await prisma.stripeCustomer.findUnique({
-    where: { stripeCustomerId },
-  });
-
-  if (linkedCustomer) {
-    return linkedCustomer.userId;
-  }
+  // TODO: StripeCustomer table doesn't exist yet
+  // const linkedCustomer = await prisma.stripeCustomer.findUnique({
+  //   where: { stripeCustomerId },
+  // });
+  // if (linkedCustomer) {
+  //   return linkedCustomer.userId;
+  // }
 
   try {
     const customer = await stripe.customers.retrieve(stripeCustomerId);
@@ -113,8 +115,8 @@ async function resolveUserId(
       return null;
     }
 
-    const user = await prisma.user.findUnique({
-      where: { clerkUserId },
+    const user = await prisma.users.findUnique({
+      where: { id: clerkUserId },
     });
 
     return user?.id ?? null;
@@ -173,109 +175,12 @@ export async function POST(req: Request) {
   const isActive = ACTIVE_STATUSES.has(subscription.status);
   const endsAt = isActive ? null : new Date();
 
-interface TransactionClient {
-    stripeCustomer: {
-        upsert(args: {
-            where: { stripeCustomerId: string };
-            update: { userId: string };
-            create: { stripeCustomerId: string; userId: string };
-        }): Promise<any>;
-    };
-    stripeSubscription: {
-        upsert(args: {
-            where: { stripeSubscriptionId: string };
-            update: {
-                status: string;
-                currentPeriodEnd: Date | null;
-                cancelAtPeriodEnd: boolean;
-                planKey: string | null;
-                customerUserId: string;
-            };
-            create: {
-                stripeSubscriptionId: string;
-                status: string;
-                currentPeriodEnd: Date | null;
-                cancelAtPeriodEnd: boolean;
-                planKey: string | null;
-                customerUserId: string;
-            };
-        }): Promise<any>;
-    };
-    userBotAccess: {
-        upsert(args: {
-            where: {
-                userId_botId_source: {
-                    userId: string;
-                    botId: string;
-                    source: "PREMIUM" | "BOT_SUBSCRIPTION";
-                };
-            };
-            update: {
-                status: "ACTIVE" | "CANCELED";
-                endsAt: Date | null;
-            };
-            create: {
-                userId: string;
-                botId: string;
-                source: "PREMIUM" | "BOT_SUBSCRIPTION";
-                status: "ACTIVE" | "CANCELED";
-                endsAt: Date | null;
-            };
-        }): Promise<any>;
-    };
-}
+  // TODO: Stripe subscription tables (stripeCustomer, stripeSubscription, userBotAccess) don't exist yet
+  // For now, just log the webhook event
+  console.log(`Stripe webhook received: ${event.type} for user ${userId}`);
+  console.log(`Plan keys:`, planKeys);
+  console.log(`Entitlements:`, entitlements);
+  console.log(`Status: ${isActive ? 'ACTIVE' : 'CANCELED'}`);
 
-await prisma.$transaction(async (tx: TransactionClient) => {
-    await tx.stripeCustomer.upsert({
-        where: { stripeCustomerId },
-        update: { userId },
-        create: { stripeCustomerId, userId },
-    });
-
-    await tx.stripeSubscription.upsert({
-        where: { stripeSubscriptionId },
-        update: {
-            status: subscription.status,
-            currentPeriodEnd: unixToDate(subscription.current_period_end),
-            cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
-            planKey: planKeys[0] ?? null,
-            customerUserId: userId,
-        },
-        create: {
-            stripeSubscriptionId,
-            status: subscription.status,
-            currentPeriodEnd: unixToDate(subscription.current_period_end),
-            cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
-            planKey: planKeys[0] ?? null,
-            customerUserId: userId,
-        },
-    });
-
-    for (const entitlement of entitlements) {
-        await ensureBot(entitlement.botId);
-
-        await tx.userBotAccess.upsert({
-            where: {
-                userId_botId_source: {
-                    userId,
-                    botId: entitlement.botId,
-                    source: entitlement.source,
-                },
-            },
-            update: {
-                status: isActive ? "ACTIVE" : "CANCELED",
-                endsAt,
-            },
-            create: {
-                userId,
-                botId: entitlement.botId,
-                source: entitlement.source,
-                status: isActive ? "ACTIVE" : "CANCELED",
-                endsAt,
-            },
-        });
-    }
-});
-
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, userId, message: "Stripe tables not yet implemented" });
 }

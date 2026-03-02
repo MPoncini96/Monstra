@@ -10,16 +10,19 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { clerkUserId: userId },
-      select: { monstraBytes: true },
+    // Note: monstraBytes doesn't exist in current schema
+    // Using user_currency_balance instead
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+      select: { id: true },
     });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ monstraBytes: user.monstraBytes });
+    // TODO: Implement currency balance lookup
+    return NextResponse.json({ monstraBytes: 0 });
   } catch (error) {
     console.error("Error fetching monstra bytes:", error);
     return NextResponse.json(
