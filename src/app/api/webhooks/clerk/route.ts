@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 import prisma from "@/libs/prismaDB";
-import { Prisma } from "@prisma/client";
 
 type ClerkWebhookEvent = {
   type: "user.created" | "user.updated" | "user.deleted" | string;
@@ -82,17 +81,16 @@ export async function POST(req: Request) {
   try {
     // Handle deletes (optional but recommended)
     if (type === "user.deleted") {
-      await prisma.$executeRaw`
-        DELETE FROM app.users
-        WHERE id = ${clerkUserId}
-      `;
+      await prisma.user.delete({
+        where: { clerkUserId }
+      });
       return NextResponse.json({ ok: true, type, userId: clerkUserId });
     }
 
     if (type === "user.created" || type === "user.updated") {
       const email = getPrimaryEmail(data);
 
-      // Your app.users.email column is NOT NULL — so we must have an email
+      // Email is required for user creation
       if (!email) {
         console.error("[clerk webhook] No email found for user", clerkUserId);
         return NextResponse.json(
@@ -101,26 +99,18 @@ export async function POST(req: Request) {
         );
       }
 
-      const username = data.username ?? null;
-
-      // Do both user upsert + starting currency grant in ONE transaction
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      // Upsert into app.users
-      await tx.$executeRaw`
-        INSERT INTO app.users (id, email, username, role, level, xp, created_at, updated_at)
-        VALUES (${clerkUserId}, ${email}, ${username}, 'user', 1, 0, now(), now())
-        ON CONFLICT (id) DO UPDATE
-        SET email = EXCLUDED.email,
-            username = EXCLUDED.username,
-            updated_at = now()
-      `;
-
-      // Grant starting currencies only on create
-      // (This assumes you've created app.grant_starting_currencies(TEXT))
-      if (type === "user.created") {
-        await tx.$executeRaw`SELECT app.grant_starting_currencies(${clerkUserId})`;
-      }
-    });
+      // Upsert user via Prisma
+      await prisma.user.upsert({
+        where: { clerkUserId },
+        create: {
+          clerkUserId,
+          email,
+          monstraBytes: 1000,
+        },
+        update: {
+          email,
+        },
+      });
 
       return NextResponse.json({ ok: true, type, userId: clerkUserId });
     }
