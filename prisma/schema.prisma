@@ -8,104 +8,53 @@ datasource db {
   schemas  = ["app", "trading"]
 }
 
-model User {
-  id           String   @id @default(cuid())
-  clerkUserId  String   @unique
-  email        String?
-  monstraBytes Int      @default(1000)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  profile   UserProfile?
-  botAccess UserBotAccess[]
-  stripe    StripeCustomer?
+model game_currency {
+  currency_code         String                  @id
+  display_name          String
+  description           String?
+  decimals              Int                     @default(0) @db.SmallInt
+  is_active             Boolean                 @default(true)
+  created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  user_currency_balance user_currency_balance[]
 
   @@schema("app")
 }
 
-model UserProfile {
-  userId String @id
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+model user_currency_balance {
+  user_id       String
+  currency_code String
+  balance       BigInt        @default(0)
+  updated_at    DateTime      @default(now()) @db.Timestamptz(6)
+  game_currency game_currency @relation(fields: [currency_code], references: [currency_code], onDelete: NoAction, onUpdate: NoAction)
+  users         users         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  displayName String?
-  avatarUrl   String?
-  bio         String?
-
+  @@id([user_id, currency_code])
   @@schema("app")
 }
 
-model Bot {
-  id          String  @id
-  name        String
-  description String?
-  isOfficial  Boolean @default(false)
-  isPublic    Boolean @default(true)
+model users {
+  id                    String                  @id
+  email                 String                  @unique
+  username              String?                 @unique
+  role                  String                  @default("user")
+  level                 Int                     @default(1)
+  xp                    Int                     @default(0)
+  created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime                @default(now()) @db.Timestamptz(6)
+  user_currency_balance user_currency_balance[]
 
-  access UserBotAccess[]
-
+  @@index([email], map: "idx_users_email")
   @@schema("app")
 }
 
-model UserBotAccess {
-  id     String @id @default(cuid())
-  userId String
-  botId  String
+model bot_equity {
+  bot_id     String
+  d          DateTime  @db.Date
+  equity     Float
+  ret        Float?
+  holdings   Json?
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
 
-  source   AccessSource
-  status   AccessStatus @default(ACTIVE)
-  startsAt DateTime     @default(now())
-  endsAt   DateTime?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bot  Bot  @relation(fields: [botId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, botId, source])
-  @@index([botId])
-  @@schema("app")
-}
-
-enum AccessSource {
-  FREE
-  PREMIUM
-  BOT_SUBSCRIPTION
-  GRANT
-
-  @@schema("app")
-}
-
-enum AccessStatus {
-  ACTIVE
-  PAUSED
-  CANCELED
-  EXPIRED
-
-  @@schema("app")
-}
-
-model StripeCustomer {
-  userId           String   @id
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  stripeCustomerId String   @unique
-  createdAt        DateTime @default(now())
-
-  subscriptions StripeSubscription[]
-
-  @@schema("app")
-}
-
-model StripeSubscription {
-  id                   String @id @default(cuid())
-  stripeSubscriptionId String @unique
-  customerUserId       String
-
-  status            String
-  currentPeriodEnd  DateTime?
-  cancelAtPeriodEnd Boolean   @default(false)
-
-  planKey String?
-
-  customer StripeCustomer @relation(fields: [customerUserId], references: [userId], onDelete: Cascade)
-
-  @@index([customerUserId])
-  @@schema("app")
+  @@id([bot_id, d])
+  @@schema("trading")
 }

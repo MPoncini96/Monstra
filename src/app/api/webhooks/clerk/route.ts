@@ -72,19 +72,20 @@ export async function POST(req: Request) {
   }
 
   const { type, data } = evt;
-  const clerkUserId = data?.id;
+  const userId = data?.id;
 
-  if (!clerkUserId) {
+  if (!userId) {
     return NextResponse.json({ error: "Missing user id" }, { status: 400 });
   }
 
   try {
-    // Handle deletes (optional but recommended)
+    // Handle deletes
     if (type === "user.deleted") {
-      await prisma.user.delete({
-        where: { clerkUserId }
+      await prisma.users.delete({
+        where: { id: userId }
       });
-      return NextResponse.json({ ok: true, type, userId: clerkUserId });
+      console.log("[clerk webhook] User deleted:", userId);
+      return NextResponse.json({ ok: true, type, userId });
     }
 
     if (type === "user.created" || type === "user.updated") {
@@ -92,27 +93,34 @@ export async function POST(req: Request) {
 
       // Email is required for user creation
       if (!email) {
-        console.error("[clerk webhook] No email found for user", clerkUserId);
+        console.error("[clerk webhook] No email found for user", userId);
         return NextResponse.json(
           { error: "No email found on Clerk user" },
           { status: 400 }
         );
       }
 
+      const username = data.username ?? null;
+
       // Upsert user via Prisma
-      await prisma.user.upsert({
-        where: { clerkUserId },
+      await prisma.users.upsert({
+        where: { id: userId },
         create: {
-          clerkUserId,
+          id: userId,
           email,
-          monstraBytes: 1000,
+          username,
+          role: "user",
+          level: 1,
+          xp: 0,
         },
         update: {
           email,
+          username,
         },
       });
 
-      return NextResponse.json({ ok: true, type, userId: clerkUserId });
+      console.log("[clerk webhook] User upserted:", userId);
+      return NextResponse.json({ ok: true, type, userId });
     }
 
     // Ignore other event types
