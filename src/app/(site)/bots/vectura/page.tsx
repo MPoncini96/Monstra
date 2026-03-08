@@ -163,6 +163,7 @@ export default function VecturaPage() {
                 month: "short",
                 day: "numeric",
                 year: "numeric",
+                timeZone: "UTC",
               }),
               dailyReturn,
             };
