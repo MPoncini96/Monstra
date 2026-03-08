@@ -125,7 +125,8 @@ export default function VisPage() {
         const startDate = `${startYear}-${startMonth}-${startDay}`;
 
         const response = await fetch(
-          `/api/bots/vis/equity?start=${startDate}&end=${today}`
+          `/api/bots/vis/equity?start=${startDate}&end=${today}`,
+          { cache: "no-store" }
         );
 
         if (!response.ok) {

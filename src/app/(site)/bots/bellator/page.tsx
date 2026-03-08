@@ -125,7 +125,8 @@ export default function BellatorPage() {
         const startDate = `${startYear}-${startMonth}-${startDay}`;
 
         const response = await fetch(
-          `/api/bots/bellator/equity?start=${startDate}&end=${today}`
+          `/api/bots/bellator/equity?start=${startDate}&end=${today}`,
+          { cache: "no-store" }
         );
 
         if (!response.ok) {

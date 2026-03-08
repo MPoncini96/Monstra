@@ -125,7 +125,8 @@ export default function CyclusPage() {
         const startDate = `${startYear}-${startMonth}-${startDay}`;
 
         const response = await fetch(
-          `/api/bots/cyclus/equity?start=${startDate}&end=${today}`
+          `/api/bots/cyclus/equity?start=${startDate}&end=${today}`,
+          { cache: "no-store" }
         );
 
         if (!response.ok) {

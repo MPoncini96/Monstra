@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Client } from "pg";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ bot: string }> }
@@ -71,7 +74,11 @@ export async function GET(
 
     console.log(`Returned ${res.rows.length} equity records for bot: ${bot}`);
     await client.end();
-    return NextResponse.json(res.rows);
+    return NextResponse.json(res.rows, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+      },
+    });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : '';

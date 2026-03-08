@@ -125,7 +125,8 @@ export default function MedicusPage() {
         const startDate = `${startYear}-${startMonth}-${startDay}`;
 
         const response = await fetch(
-          `/api/bots/medicus/equity?start=${startDate}&end=${today}`
+          `/api/bots/medicus/equity?start=${startDate}&end=${today}`,
+          { cache: "no-store" }
         );
 
         if (!response.ok) {

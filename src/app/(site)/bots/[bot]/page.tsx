@@ -111,7 +111,8 @@ export default function BotPage({ params }: { params: { bot: string } }) {
         const startDate = `${startYear}-${startMonth}-${startDay}`;
 
         const response = await fetch(
-          `/api/bots/${params.bot}/equity?start=${startDate}&end=${today}`
+          `/api/bots/${params.bot}/equity?start=${startDate}&end=${today}`,
+          { cache: "no-store" }
         );
 
         if (!response.ok) {

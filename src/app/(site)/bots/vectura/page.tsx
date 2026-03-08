@@ -125,7 +125,8 @@ export default function VecturaPage() {
         const startDate = `${startYear}-${startMonth}-${startDay}`;
 
         const response = await fetch(
-          `/api/bots/vectura/equity?start=${startDate}&end=${today}`
+          `/api/bots/vectura/equity?start=${startDate}&end=${today}`,
+          { cache: "no-store" }
         );
 
         if (!response.ok) {
