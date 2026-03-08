@@ -12,6 +12,35 @@ import {
   Legend,
 } from "recharts";
 
+const formatUtcDateLabel = (dateValue: string) => {
+  const parts = dateValue.split("-");
+  if (parts.length === 3) {
+    const year = Number(parts[0]);
+    const month = Number(parts[1]);
+    const day = Number(parts[2]);
+
+    if (
+      Number.isFinite(year) &&
+      Number.isFinite(month) &&
+      Number.isFinite(day)
+    ) {
+      return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC",
+      });
+    }
+  }
+
+  return new Date(dateValue).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+};
+
 const CustomTooltip = ({ active, payload, initialEquity }: any) => {
   if (active && payload && payload.length && initialEquity) {
     const currentEquity = payload[0].value;
@@ -119,11 +148,7 @@ export default function BotPage({ params }: { params: { bot: string } }) {
 
             return {
               ...item,
-              date: new Date(item.d).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              }),
+              date: formatUtcDateLabel(item.d),
               dailyReturn,
             };
           }

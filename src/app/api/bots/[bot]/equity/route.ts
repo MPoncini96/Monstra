@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import { Client } from "pg";
-import prisma from "@/libs/prismaDB";
-
-const FREE_DELAY_DAYS = 14;
 
 export async function GET(
   req: NextRequest,
@@ -18,44 +14,8 @@ export async function GET(
     return NextResponse.json({ error: "Missing start/end" }, { status: 400 });
   }
 
-  const { userId: clerkUserId } = await auth();
-  let isEntitled = false;
-
-  if (clerkUserId) {
-    try {
-      const user = await prisma.users.findUnique({
-        where: { id: clerkUserId },
-        select: { id: true },
-      });
-
-      if (user) {
-        // TODO: UserBotAccess table doesn't exist yet
-        // For now, all authenticated users have access
-        isEntitled = true;
-        console.log(`Entitlement check for user ${clerkUserId}, bot ${bot}: ${isEntitled}`);
-      }
-    } catch (err) {
-      console.error("Error checking entitlements:", err);
-      // Fall through to free tier on error
-    }
-  }
-
   let effectiveStart = start;
   let effectiveEnd = end;
-
-  if (!isEntitled) {
-    const cutoffDate = new Date();
-    cutoffDate.setUTCDate(cutoffDate.getUTCDate() - FREE_DELAY_DAYS);
-    const cutoff = cutoffDate.toISOString().slice(0, 10);
-
-    if (start > cutoff) {
-      return NextResponse.json([]);
-    }
-
-    if (end > cutoff) {
-      effectiveEnd = cutoff;
-    }
-  }
 
   let client: Client | undefined;
   try {
