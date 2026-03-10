@@ -4,6 +4,76 @@ import { Client } from "pg";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+type HoldingsValue = Record<string, unknown> | string | null | undefined;
+
+const isFiniteNumber = (value: unknown): value is number =>
+  typeof value === "number" && Number.isFinite(value);
+
+const parseHoldingsObject = (value: HoldingsValue): Record<string, unknown> => {
+  if (!value) return {};
+
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value) as unknown;
+      return parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : {};
+    } catch {
+      return {};
+    }
+  }
+
+  return typeof value === "object" ? value : {};
+};
+
+const extractNumericHoldings = (value: HoldingsValue): Record<string, number> => {
+  const parsed = parseHoldingsObject(value);
+
+  const topLevel = Object.entries(parsed)
+    .filter(([key, val]) => !key.startsWith("_") && isFiniteNumber(val))
+    .reduce<Record<string, number>>((acc, [key, val]) => {
+      acc[key] = val as number;
+      return acc;
+    }, {});
+
+  if (Object.keys(topLevel).length > 0) {
+    return topLevel;
+  }
+
+  const payload = parsed._payload;
+  if (payload && typeof payload === "object") {
+    const targetWeights = (payload as Record<string, unknown>).target_weights;
+    if (targetWeights && typeof targetWeights === "object") {
+      return Object.entries(targetWeights as Record<string, unknown>)
+        .filter(([, val]) => isFiniteNumber(val))
+        .reduce<Record<string, number>>((acc, [key, val]) => {
+          acc[key] = val as number;
+          return acc;
+        }, {});
+    }
+  }
+
+  return {};
+};
+
+const isCarryForwardRow = (value: HoldingsValue): boolean => {
+  const parsed = parseHoldingsObject(value);
+  const note = String(parsed._note ?? "").toLowerCase();
+  if (note.includes("carry forward")) {
+    return true;
+  }
+
+  const payload = parsed._payload;
+  if (payload && typeof payload === "object") {
+    const payloadObj = payload as Record<string, unknown>;
+    const riskReason = String(payloadObj.risk_reason ?? "").toLowerCase();
+    const rebalancedToday = payloadObj.rebalanced_today;
+    if (riskReason === "carry_forward" || rebalancedToday === false) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ bot: string }> }
@@ -72,9 +142,27 @@ export async function GET(
       [bot, effectiveStart, e0, effectiveEnd]
     );
 
-    console.log(`Returned ${res.rows.length} equity records for bot: ${bot}`);
+    const normalizedRows = res.rows.map((row) => ({ ...row }));
+    let lastKnownHoldings: Record<string, number> = {};
+
+    for (const row of normalizedRows) {
+      const extracted = extractNumericHoldings(row.holdings);
+      if (Object.keys(extracted).length > 0) {
+        row.holdings = extracted;
+        lastKnownHoldings = extracted;
+        continue;
+      }
+
+      if (isCarryForwardRow(row.holdings) && Object.keys(lastKnownHoldings).length > 0) {
+        row.holdings = lastKnownHoldings;
+      } else {
+        row.holdings = extracted;
+      }
+    }
+
+    console.log(`Returned ${normalizedRows.length} equity records for bot: ${bot}`);
     await client.end();
-    return NextResponse.json(res.rows, {
+    return NextResponse.json(normalizedRows, {
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
       },
