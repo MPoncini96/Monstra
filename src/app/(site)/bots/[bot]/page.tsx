@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -78,7 +78,8 @@ const CustomTooltip = ({ active, payload, initialEquity }: any) => {
   return null;
 };
 
-export default function BotPage({ params }: { params: { bot: string } }) {
+export default function BotPage({ params }: { params: Promise<{ bot: string }> }) {
+  const { bot } = use(params);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -111,7 +112,7 @@ export default function BotPage({ params }: { params: { bot: string } }) {
         const startDate = `${startYear}-${startMonth}-${startDay}`;
 
         const response = await fetch(
-          `/api/bots/${params.bot}/equity?start=${startDate}&end=${today}`,
+          `/api/bots/${bot}/equity?start=${startDate}&end=${today}`,
           { cache: "no-store" }
         );
 
@@ -170,7 +171,7 @@ export default function BotPage({ params }: { params: { bot: string } }) {
     };
 
     fetchData();
-  }, [params.bot, startMonth, startDay, startYear]);
+  }, [bot, startMonth, startDay, startYear]);
 
   if (loading) {
     return (
@@ -198,7 +199,7 @@ export default function BotPage({ params }: { params: { bot: string } }) {
 
   return (
     <div className="p-10 space-y-8">
-      <h1 className="text-3xl font-bold capitalize">{params.bot} Performance</h1>
+      <h1 className="text-3xl font-bold capitalize">{bot} Performance</h1>
 
       {/* Date Range Filter */}
       <div className="bg-white rounded-xl p-6 shadow-md flex gap-4">

@@ -268,7 +268,7 @@ export default function CyclusPage() {
                     }}
                   >
                     <Image
-                      src="/images/Monsters/CyclusMonstra.png"
+                      src="/images/Monsters/Cylcus_icon.png"
                       alt="Cyclus Cycle Master"
                       width={380}
                       height={380}

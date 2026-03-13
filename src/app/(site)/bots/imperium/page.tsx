@@ -268,7 +268,7 @@ export default function ImperiumPage() {
                     }}
                   >
                     <Image
-                      src="/images/Monsters/ImperiumMonstra.png"
+                      src="/images/Monsters/Imperium_Icon.png"
                       alt="Imperium Empire Builder"
                       width={380}
                       height={380}

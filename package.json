@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "backfill:currency": "node scripts/backfill-user-currency-balances.cjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {

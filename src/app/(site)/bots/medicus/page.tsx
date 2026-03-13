@@ -268,7 +268,7 @@ export default function MedicusPage() {
                     }}
                   >
                     <Image
-                      src="/images/Monsters/MedicusMonstra.png"
+                      src="/images/Monsters/Medicus_Icon.png"
                       alt="Medicus Healer"
                       width={380}
                       height={380}

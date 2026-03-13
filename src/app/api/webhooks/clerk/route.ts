@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 import prisma from "@/libs/prismaDB";
+import { initializeUserCurrencyBalances } from "@/libs/currencyDefaults";
 
 type ClerkWebhookEvent = {
   type: "user.created" | "user.updated" | "user.deleted" | string;
@@ -118,6 +119,10 @@ export async function POST(req: Request) {
           username,
         },
       });
+
+      if (type === "user.created") {
+        await initializeUserCurrencyBalances(userId, true);
+      }
 
       console.log("[clerk webhook] User upserted:", userId);
       return NextResponse.json({ ok: true, type, userId });

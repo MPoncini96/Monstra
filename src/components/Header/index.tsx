@@ -146,11 +146,29 @@ const Header = () => {
                     )}
                   </li>
                 ))}
+                <SignedIn>
+                  <li className={`nav__menu group relative ${stickyMenu ? "lg:py-4" : "lg:py-7"}`}>
+                    <Link
+                      href="/create"
+                      className={`hover:nav-gradient relative border border-transparent px-4 py-1.5 text-sm hover:text-white ${
+                        pathUrl === "/create" ? "nav-gradient text-white" : "text-white/80"
+                      }`}
+                    >
+                      Create
+                    </Link>
+                  </li>
+                </SignedIn>
               </ul>
             </nav>
 
             <div className="mt-7 flex items-center gap-6 lg:mt-0">
               <SignedIn>
+                <Link
+                  href="/my-bots"
+                  className="button-border-gradient hover:button-gradient-hover flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-white shadow-button hover:shadow-none"
+                >
+                  My Bots
+                </Link>
                 <div className="relative group">
                   <button
                     className="button-border-gradient hover:button-gradient-hover flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-white shadow-button hover:shadow-none focus:outline-none"

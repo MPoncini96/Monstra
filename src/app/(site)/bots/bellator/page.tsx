@@ -132,7 +132,9 @@ export default function BellatorPage() {
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           throw new Error(
-            errorData.error || `HTTP ${response.status}: Failed to fetch bot data`
+            errorData.details
+              ? `${errorData.error || "Failed to fetch bot data"} (${errorData.details})`
+              : errorData.error || `HTTP ${response.status}: Failed to fetch bot data`
           );
         }
 
@@ -294,7 +296,7 @@ export default function BellatorPage() {
                     }}
                   >
                     <Image
-                      src="/images/Monsters/BellatorMonstra.png"
+                      src="/images/Monsters/Bellator_icon.png"
                       alt="Bellator Warrior"
                       width={380}
                       height={380}

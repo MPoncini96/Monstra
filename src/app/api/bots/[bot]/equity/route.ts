@@ -128,17 +128,19 @@ export async function GET(
       console.log(
         `No equity data found for bot: ${bot} starting from ${effectiveStart}`
       );
-      await client.end();
       return NextResponse.json([]);
     }
 
-    const e0 = startRes.rows[0].equity;
+    const e0 = Number(startRes.rows[0].equity);
+    if (!Number.isFinite(e0) || e0 === 0) {
+      throw new Error(`Invalid starting equity value: ${String(startRes.rows[0].equity)}`);
+    }
     console.log(`Starting equity: ${e0}`);
 
     // Query 2: Get all data normalized by starting equity
     console.log(`Querying equity range for bot=${bot}, start=${effectiveStart}, end=${effectiveEnd}`);
     const res = await client.query(
-      "SELECT d, equity / $3 AS equity, holdings FROM trading.bot_equity WHERE bot_id = $1 AND d BETWEEN $2 AND $4 ORDER BY d",
+      "SELECT d, equity / $3::double precision AS equity, holdings FROM trading.bot_equity WHERE bot_id = $1 AND d BETWEEN $2 AND $4 ORDER BY d",
       [bot, effectiveStart, e0, effectiveEnd]
     );
 
@@ -161,7 +163,6 @@ export async function GET(
     }
 
     console.log(`Returned ${normalizedRows.length} equity records for bot: ${bot}`);
-    await client.end();
     return NextResponse.json(normalizedRows, {
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
