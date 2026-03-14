@@ -2,23 +2,17 @@ import { auth } from "@clerk/nextjs/server";
 import prisma from "@/libs/prismaDB";
 import { NextResponse } from "next/server";
 import { initializeUserCurrencyBalances } from "@/libs/currencyDefaults";
+import { ensureAppUser } from "@/libs/ensureAppUser";
 
 export async function GET() {
   try {
-    const { userId } = await auth();
+    const { userId, sessionClaims } = await auth();
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.users.findUnique({
-      where: { id: userId },
-      select: { id: true },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
+    await ensureAppUser(userId, (sessionClaims ?? undefined) as Record<string, unknown> | undefined);
 
     await initializeUserCurrencyBalances(userId, false);
 

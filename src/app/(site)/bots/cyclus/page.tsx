@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
+import SubscribeButton from "@/components/Bots/SubscribeButton";
 import {
   LineChart,
   Line,
@@ -277,7 +278,6 @@ export default function CyclusPage() {
                   </div>
                 </div>
               </div>
-
               <div className="relative z-10 mt-10 text-left">
                 <p className="text-white/80 text-sm leading-relaxed">
                   Born from the endless rotation of seasons and tides, Cyclus sees patterns where 
@@ -292,6 +292,12 @@ export default function CyclusPage() {
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section suppressHydrationWarning className="pb-4">
+      <div className="mx-auto flex max-w-[1170px] justify-center px-4 sm:px-8 xl:px-0">
+        <SubscribeButton botId="cyclus" />
       </div>
     </section>
 

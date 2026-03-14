@@ -8,10 +8,16 @@ import logo from "../../../public/images/logo/logo.png";
 import DropDown from "./DropDown";
 import menuData from "./menuData";
 
+type CurrencyBalanceItem = {
+  currencyCode: string;
+  displayName: string;
+  balance: number;
+};
+
 const Header = () => {
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
-  const [monstraBytes, setMonstraBytes] = useState<number | null>(null);
+  const [currencyBalances, setCurrencyBalances] = useState<CurrencyBalanceItem[]>([]);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const { user } = useUser();
@@ -27,21 +33,25 @@ const Header = () => {
     }
   };
 
-  // Fetch user's monstra bytes
+  // Fetch user's currency balances
   useEffect(() => {
     if (user) {
-      const fetchMonstraBytes = async () => {
+      const fetchCurrencyBalances = async () => {
         try {
-          const res = await fetch("/api/user/monstra-bytes");
+          const res = await fetch("/api/user/currency-balances", {
+            cache: "no-store",
+          });
           if (res.ok) {
             const data = await res.json();
-            setMonstraBytes(data.monstraBytes);
+            setCurrencyBalances(Array.isArray(data?.balances) ? data.balances : []);
           }
         } catch (error) {
-          console.error("Failed to fetch monstra bytes:", error);
+          console.error("Failed to fetch currency balances:", error);
         }
       };
-      fetchMonstraBytes();
+      fetchCurrencyBalances();
+    } else {
+      setCurrencyBalances([]);
     }
   }, [user]);
 
@@ -67,7 +77,7 @@ const Header = () => {
               {user && (
                 <Link
                   href="/premium"
-                  className="button-border-gradient hover:button-gradient-hover relative flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs text-white shadow-button hover:shadow-none"
+                  className="relative flex items-center justify-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs text-white hover:bg-white/15"
                 >
                   Join Monstra Premium
                 </Link>
@@ -165,13 +175,13 @@ const Header = () => {
               <SignedIn>
                 <Link
                   href="/my-bots"
-                  className="button-border-gradient hover:button-gradient-hover flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-white shadow-button hover:shadow-none"
+                  className="flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/15"
                 >
                   My Bots
                 </Link>
                 <div className="relative group">
                   <button
-                    className="button-border-gradient hover:button-gradient-hover flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-white shadow-button hover:shadow-none focus:outline-none"
+                    className="flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/15 focus:outline-none"
                     onClick={() => setSettingsOpen((open) => !open)}
                     onBlur={() => setTimeout(() => setSettingsOpen(false), 150)}
                   >
@@ -183,30 +193,19 @@ const Header = () => {
                   {settingsOpen && (
                     <div className="absolute right-0 mt-2 w-56 rounded-lg bg-dark/95 shadow-lg border border-white/10 z-1001 p-4">
                       <div className="flex flex-col gap-2 text-sm text-white">
-                        <div className="flex items-center gap-2 justify-between">
-                          <span>MonstraBytes</span>
-                          <span className="font-semibold">3</span>
-                        </div>
-                        <div className="flex items-center gap-2 justify-between">
-                          <span>AurumBytes</span>
-                          <span className="font-semibold">0</span>
-                        </div>
-                        <div className="flex items-center gap-2 justify-between">
-                          <span>Nums</span>
-                          <span className="font-semibold">10</span>
-                        </div>
-                        <div className="flex items-center gap-2 justify-between">
-                          <span>Flamma</span>
-                          <span className="font-semibold">5</span>
-                        </div>
-                        <div className="flex items-center gap-2 justify-between">
-                          <span>Mutates</span>
-                          <span className="font-semibold">5</span>
-                        </div>
-                        <div className="flex items-center gap-2 justify-between">
-                          <span>Fortuna</span>
-                          <span className="font-semibold">1000</span>
-                        </div>
+                        {currencyBalances.length === 0 ? (
+                          <div className="text-white/70">Loading balances...</div>
+                        ) : (
+                          currencyBalances.map((currency) => (
+                            <div
+                              key={currency.currencyCode}
+                              className="flex items-center gap-2 justify-between"
+                            >
+                              <span>{currency.displayName}</span>
+                              <span className="font-semibold">{currency.balance}</span>
+                            </div>
+                          ))
+                        )}
                       </div>
                     </div>
                   )}

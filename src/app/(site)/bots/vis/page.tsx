@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
+import SubscribeButton from "@/components/Bots/SubscribeButton";
 import {
   LineChart,
   Line,
@@ -279,7 +280,6 @@ export default function VisPage() {
                   </div>
                 </div>
               </div>
-
               <div className="relative z-10 mt-10 text-left">
                 <p className="text-white/80 text-sm leading-relaxed">
                   Born in the glow of refinery fires and the hum of offshore rigs, Vis doesn't chase 
@@ -295,6 +295,12 @@ export default function VisPage() {
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section suppressHydrationWarning className="pb-4">
+      <div className="mx-auto flex max-w-[1170px] justify-center px-4 sm:px-8 xl:px-0">
+        <SubscribeButton botId="vis" />
       </div>
     </section>
 

@@ -108,7 +108,7 @@ function CreateNav() {
 export default function CreateLayout({ children }: PropsWithChildren) {
   return (
     <div className='mx-auto grid max-w-[1170px] gap-x-8 gap-y-4 pt-24 pb-16 md:pt-28 md:pb-20 lg:grid-cols-[auto_1fr] lg:pt-32 lg:pb-24'>
-      <aside className='max-h-fit rounded-lg bg-white/5 p-4 lg:sticky lg:top-[80px]'>
+      <aside className='max-h-fit rounded-lg border-0 bg-white/5 p-4 outline-none ring-0 lg:sticky lg:top-[80px]'>
         <Suspense fallback={null}>
           <CreateNav />
         </Suspense>

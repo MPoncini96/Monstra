@@ -1,10 +1,22 @@
 import { auth } from "@clerk/nextjs/server";
 import { Client } from "pg";
 import Link from "next/link";
+import prisma from "@/libs/prismaDB";
+import { ensureSubscriptionsTable } from "@/libs/subscriptionsTable";
 
 type BotRow = {
   bot_id: string;
   name: string;
+};
+
+const DEFAULT_BOT_NAMES: Record<string, string> = {
+  bellator: "Bellator",
+  cyclus: "Cyclus",
+  imperium: "Imperium",
+  medicus: "Medicus",
+  vectura: "Vectura",
+  viator: "Viator",
+  vis: "Vis",
 };
 
 async function getCreatedBots(username: string | null, userId: string): Promise<BotRow[]> {
@@ -40,63 +52,25 @@ async function getCreatedBots(username: string | null, userId: string): Promise<
 }
 
 async function getSubscribedBots(userId: string): Promise<BotRow[]> {
-  if (!process.env.DATABASE_URL) return [];
+  await ensureSubscriptionsTable();
 
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    connectionTimeoutMillis: 20000,
-    statement_timeout: 30000,
-    ssl: { rejectUnauthorized: false },
+  const subscriptions = await prisma.$queryRawUnsafe<Array<{ bot_id: string }>>(
+    `SELECT bot_id
+     FROM app.subscriptions
+     WHERE user_id = $1
+     ORDER BY created_at DESC`,
+    userId
+  );
+
+  return subscriptions.map((subscription) => {
+    const botId = subscription.bot_id;
+    const defaultName = DEFAULT_BOT_NAMES[botId];
+
+    return {
+      bot_id: botId,
+      name: defaultName ?? botId,
+    };
   });
-
-  const attempts: Array<{ query: string; params: unknown[] }> = [
-    {
-      query: `SELECT DISTINCT uba."botId" AS bot_id,
-                     COALESCE(NULLIF(a.name, ''), uba."botId") AS name
-              FROM app_state."UserBotAccess" uba
-              LEFT JOIN trading.alpha1 a ON a.bot_id = uba."botId"
-              WHERE uba."userId" = $1
-              ORDER BY name ASC`,
-      params: [userId],
-    },
-    {
-      query: `SELECT DISTINCT uba.bot_id,
-                     COALESCE(NULLIF(a.name, ''), uba.bot_id) AS name
-              FROM app_state."UserBotAccess" uba
-              LEFT JOIN trading.alpha1 a ON a.bot_id = uba.bot_id
-              WHERE uba.user_id = $1
-              ORDER BY name ASC`,
-      params: [userId],
-    },
-    {
-      query: `SELECT DISTINCT uba.bot_id,
-                     COALESCE(NULLIF(a.name, ''), uba.bot_id) AS name
-              FROM app.user_bot_access uba
-              LEFT JOIN trading.alpha1 a ON a.bot_id = uba.bot_id
-              WHERE uba.user_id = $1
-              ORDER BY name ASC`,
-      params: [userId],
-    },
-  ];
-
-  try {
-    await client.connect();
-
-    for (const attempt of attempts) {
-      try {
-        const result = await client.query(attempt.query, attempt.params);
-        return result.rows as BotRow[];
-      } catch {
-        continue;
-      }
-    }
-
-    return [];
-  } catch {
-    return [];
-  } finally {
-    await client.end().catch(() => undefined);
-  }
 }
 
 function BotGrid({ bots }: { bots: BotRow[] }) {
