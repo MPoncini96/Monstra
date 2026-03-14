@@ -22,7 +22,7 @@
 /* Main popover background */
 .cl-userButtonPopoverCard {
   background: #000000;
-  border: 1px solid #2e1065; /* dark purple */
+  border: none;
   border-radius: 12px;
   padding: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
@@ -32,7 +32,7 @@
 /* Action buttons (Manage account / Sign out) */
 .cl-userButtonPopoverActionButton {
   background: #111111; /* slightly lifted black */
-  border: 1px solid #2e1065; /* dark purple border */
+  border: none;
   border-radius: 8px;
   transition: background 0.2s ease, border 0.2s ease;
 }
@@ -46,7 +46,7 @@
 /* Footer */
 /* Footer divider */
 .cl-userButtonPopoverFooter {
-  border-top: 1px solid #2e1065;
+  border-top: none;
 }
 /* Development mode text */
 .cl-userButtonPopoverFooter span,
@@ -496,7 +496,7 @@
     rgba(255, 255, 255, 0.09) 10.51%,
     rgba(255, 255, 255, 0) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: none;
   border-radius: 50px;
   &::before {
     content: '';

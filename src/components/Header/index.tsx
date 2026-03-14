@@ -216,7 +216,7 @@ const Header = () => {
                   appearance={{
                     elements: {
                       userButtonAvatarBox: "hidden", // Hide the avatar
-                      userButtonPopoverCard: "bg-[#18144a] border border-[#22204a] text-[#b8860b] rounded-lg shadow-lg",
+                      userButtonPopoverCard: "bg-[#18144a] border-0 text-[#b8860b] rounded-lg shadow-lg",
                       userButtonPopoverActionButton: "hover:bg-[#0a1433] text-[#b8860b]",
                       userButtonPopoverActionButtonIcon: "text-[#b8860b]",
                       userButtonPopoverFooter: "bg-[#0a1433] text-[#b8860b] rounded-b-lg",
