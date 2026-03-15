@@ -26,34 +26,20 @@ export async function GET(_: Request, { params }: RouteContext) {
     return NextResponse.json({ error: "Invalid bot id" }, { status: 400 });
   }
 
-  const { userId, sessionClaims } = await auth();
+  const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ subscribed: false, monstraBytes: 0, requiresAuth: true });
   }
 
-  await ensureAppUser(userId, (sessionClaims ?? undefined) as Record<string, unknown> | undefined);
-  await initializeUserCurrencyBalances(userId, false);
-
-  const [subscriptions, balanceRow] = await Promise.all([
-    prisma.$queryRawUnsafe<Array<{ id: string }>>(
-      `SELECT id FROM app.subscriptions WHERE user_id = $1 AND bot_id = $2 LIMIT 1`,
-      userId,
-      normalizedBotId
-    ),
-    prisma.user_currency_balance.findUnique({
-      where: {
-        user_id_currency_code: {
-          user_id: userId,
-          currency_code: MONSTRA_BYTES_CODE,
-        },
-      },
-      select: { balance: true },
-    }),
-  ]);
+  const subscriptions = await prisma.$queryRawUnsafe<Array<{ id: string }>>(
+    `SELECT id FROM app.subscriptions WHERE user_id = $1 AND bot_id = $2 LIMIT 1`,
+    userId,
+    normalizedBotId
+  );
 
   return NextResponse.json({
     subscribed: subscriptions.length > 0,
-    monstraBytes: Number(balanceRow?.balance ?? BigInt(0)),
+    monstraBytes: 0,
     requiresAuth: false,
   });
 }
